@@ -1,15 +1,11 @@
 package org.igorski.springkeycloak.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.igorski.springkeycloak.WebClientToken;
 import org.igorski.springkeycloak.model.Initiative;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -28,22 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class InitiativeControllerIT {
 
-    @Value("${keycloak.auth-server-url}")
-    private String authUrl;
-
-
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private WebClientToken webClientToken;
 
     @Test
     public void shouldCreateInitiative() throws Exception {
-        Keycloak keycloak = KeycloakBuilder.builder()
-                .build();
-
-        AccessTokenResponse accessToken = keycloak.tokenManager().getAccessToken();
 
         Initiative initiative = new Initiative();
         initiative.setDescription("New initiative to collect money for medical bills.");
@@ -52,7 +42,7 @@ public class InitiativeControllerIT {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/initiative")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + accessToken.getToken())
+                .header("Authorization", "Bearer " + webClientToken.getValue())
                 .content(OBJECT_MAPPER.writeValueAsString(initiative)))
                 .andDo(print())
                 .andExpect(status().isOk())
