@@ -2,6 +2,9 @@ language: java
 jdk:
     - oraclejdk9
     - openjdk11
+addons:
+    sonarcloud:
+        organization: "Aktivator" # the key of the org you chose at step #3
 
 script:
     - mvn verify
