@@ -8,3 +8,4 @@ addons:
 
 script:
     - mvn verify
+    - sonar-scanner
