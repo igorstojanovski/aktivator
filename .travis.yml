@@ -4,7 +4,7 @@ jdk:
     - openjdk11
 addons:
     sonarcloud:
-        organization: "aktivator-io_aktivator-api"
+        organization: "aktivator-api"
 
 script:
     - mvn verify
