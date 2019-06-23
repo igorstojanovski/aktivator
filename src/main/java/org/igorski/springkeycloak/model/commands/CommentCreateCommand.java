@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import java.util.Date;
 
+/**
+ * Command to create a {@link org.igorski.springkeycloak.model.Comment}.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
