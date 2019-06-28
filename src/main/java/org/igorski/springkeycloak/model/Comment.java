@@ -1,8 +1,10 @@
 package org.igorski.springkeycloak.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.igorski.springkeycloak.configuration.json.UserIdSerializer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +24,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String ownerId;
+    
+    @JsonSerialize(using = UserIdSerializer.class)
+    private String owner;
     @Column(nullable = false)
     private String text;
     @ManyToOne
@@ -36,7 +40,7 @@ public class Comment {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
         return Objects.equals(id, comment.id) &&
-            ownerId.equals(comment.ownerId) &&
+            owner.equals(comment.owner) &&
             text.equals(comment.text) &&
             initiative.equals(comment.initiative) &&
             date.equals(comment.date);
@@ -44,6 +48,6 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ownerId, text, initiative, date);
+        return Objects.hash(id, owner, text, initiative, date);
     }
 }

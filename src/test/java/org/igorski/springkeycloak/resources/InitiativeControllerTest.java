@@ -46,7 +46,7 @@ public class InitiativeControllerTest {
         user.setId("a");
         when(userService.getCurrentUser()).thenReturn(user);
 
-        ResponseEntity<Initiative> response = initiativeController.createIntiative(initiative);
+        ResponseEntity<Initiative> response = initiativeController.createInitiative(initiative);
         Initiative body = response.getBody();
 
         assertThat(body).isNotNull();

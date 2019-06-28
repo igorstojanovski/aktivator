@@ -26,7 +26,7 @@ public class InitiativeController {
     }
 
     @PostMapping
-    public ResponseEntity<Initiative> createIntiative(@RequestBody Initiative initiative) {
+    public ResponseEntity<Initiative> createInitiative(@RequestBody Initiative initiative) {
         UserDTO user = userService.getCurrentUser();
         initiative.setUserId(user.getId());
         initiative = initiativeService.createInitiative(initiative);

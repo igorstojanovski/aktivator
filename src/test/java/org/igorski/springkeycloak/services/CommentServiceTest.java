@@ -33,12 +33,12 @@ class CommentServiceTest {
         Comment comment = new Comment();
         comment.setText("This is the comment.");
         comment.setInitiative(initiative);
-        comment.setOwnerId("223");
+        comment.setOwner("223");
 
         Comment createdComment = new Comment();
         createdComment.setText("This is the comment.");
         createdComment.setInitiative(initiative);
-        createdComment.setOwnerId("223");
+        createdComment.setOwner("223");
         createdComment.setId(3L);
 
         when(commentRepository.save(createdComment)).thenReturn(createdComment);

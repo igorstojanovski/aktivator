@@ -38,7 +38,7 @@ public class CommentController {
             comment.setInitiative(initiativeService.getInitiative(commentCreateCommand.getInitiativeId()));
             comment.setText(commentCreateCommand.getText());
             comment.setDate(commentCreateCommand.getDate());
-            comment.setOwnerId(user.getId());
+            comment.setOwner(user.getId());
             comment = commentService.createComment(comment);
 
             return new ResponseEntity<>(comment, HttpStatus.OK);
