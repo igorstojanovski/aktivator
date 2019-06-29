@@ -11,3 +11,5 @@ Kecloak can be accessed here: http://35.157.118.243:8080/auth
 
 Clients need to be registered in order to get client ID and secret.  
 The access token url is: http://35.157.118.243:8080/auth/realms/aktivator-test/protocol/openid-connect/token
+
+To register a user in the aktivator-test realm: http://35.157.118.243:8080/auth/realms/aktivator-test/account
