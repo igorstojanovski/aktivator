@@ -48,7 +48,7 @@ class CommentControllerTest {
     }
 
     @Test
-    public void shouldAddNewComment() throws DataException {
+    void shouldAddNewComment() throws DataException {
 
         Initiative initiative = new Initiative();
         initiative.setId(1L);
@@ -75,9 +75,30 @@ class CommentControllerTest {
     }
 
     @Test
-    public void shouldReturn404WhenInitiativeNotFound() throws DataException {
+    void shouldReturn404WhenInitiativeNotFound() throws DataException {
         when(initiativeService.getInitiative(1L)).thenThrow(new DataException("Missing initiative"));
         ResponseEntity<Comment> response = commentController.addComment(createCommand);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldRemoveCommentForOwner() throws DataException {
+        when(commentService.isOwner(123L, "223")).thenReturn(true);
+        ResponseEntity<String> response = commentController.deleteComment(123L);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void shouldBe403WhenCommentIsNotOwnedByUser() throws DataException {
+        when(commentService.isOwner(123L, "223")).thenReturn(false);
+        ResponseEntity<String> response = commentController.deleteComment(123L);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void shouldBe404WhenCommentIdDoesNotExist() throws DataException {
+        when(commentService.isOwner(123L, "223")).thenThrow(DataException.class);
+        ResponseEntity<String> response = commentController.deleteComment(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

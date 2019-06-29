@@ -27,7 +27,7 @@ class CommentServiceTest {
     private Comment comment;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         commentService = new CommentService(commentRepository);
 
         initiative = new Initiative();
@@ -40,7 +40,7 @@ class CommentServiceTest {
     }
 
     @Test
-    public void shouldUseRepoToCreateComment() {
+    void shouldUseRepoToCreateComment() {
 
         Comment createdComment = new Comment();
         createdComment.setText("This is the comment.");
@@ -53,7 +53,7 @@ class CommentServiceTest {
     }
 
     @Test
-    public void shouldReturnTrueIfUserIdIsOwner() throws DataException {
+    void shouldReturnTrueIfUserIdIsOwner() throws DataException {
         long commentId = 123L;
         comment.setId(commentId);
         when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
@@ -61,7 +61,7 @@ class CommentServiceTest {
     }
 
     @Test
-    public void shouldReturnFalseIfUserIdIsNotOwner() throws DataException {
+    void shouldReturnFalseIfUserIdIsNotOwner() throws DataException {
         long commentId = 123L;
         comment.setId(commentId);
         when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
@@ -69,7 +69,7 @@ class CommentServiceTest {
     }
 
     @Test
-    public void shouldThrowWhenCommentDoesNotExit() throws DataException {
+    void shouldThrowWhenCommentDoesNotExit() {
         long commentId = 123L;
         comment.setId(commentId);
         assertThrows(DataException.class, () -> commentService.isOwner(commentId, "223"));
