@@ -3,7 +3,6 @@ package org.igorski.springkeycloak.resources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.igorski.springkeycloak.WebClientToken;
 import org.igorski.springkeycloak.model.Initiative;
-import org.igorski.springkeycloak.model.UserDTO;
 import org.igorski.springkeycloak.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
