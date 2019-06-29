@@ -10,6 +10,8 @@ import org.igorski.springkeycloak.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,4 +49,18 @@ public class CommentController {
         }
     }
 
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
+        UserDTO user = userService.getCurrentUser();
+        try {
+            if (commentService.isOwner(commentId, user.getId())) {
+                commentService.hide(commentId);
+                return new ResponseEntity<>("Comment removed.", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Not owner of comment.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (DataException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -33,7 +33,7 @@ public class Comment {
     private Initiative initiative;
     @Column(nullable = false)
     private Date date;
-
+    private boolean visible = true;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
