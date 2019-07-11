@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.aktivator</groupId>
-	<artifactId>api</artifactId>
+	<artifactId>aktivator-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Aktivator API</name>
 	<description>Demo project for Spring Boot</description>
