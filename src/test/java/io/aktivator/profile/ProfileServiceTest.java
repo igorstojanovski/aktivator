@@ -1,24 +1,21 @@
-package io.aktivator.services;
+package io.aktivator.profile;
 
 import io.aktivator.model.DataException;
 import io.aktivator.model.UserDTO;
-import io.aktivator.model.UserProfile;
-import io.aktivator.repositories.UserProfileRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class ProfileServiceTest {
@@ -43,17 +40,17 @@ class ProfileServiceTest {
 
     @Test
     void shouldThrowWhenProfileAlreadyExists() {
-        when(userProfileRepository.findByUserId("223")).thenReturn(Optional.of(new UserProfile()));
-        assertThrows(DataException.class, () -> profileService.createProfile(user));
+        Mockito.when(userProfileRepository.findByUserId("223")).thenReturn(Optional.of(new UserProfile()));
+        Assertions.assertThrows(DataException.class, () -> profileService.createProfile(user));
     }
 
     @Test
     void shouldSaveCorrectObject() throws DataException {
-        when(userProfileRepository.findByUserId("223")).thenReturn(Optional.empty());
-        when(userProfileRepository.save(any(UserProfile.class))).thenReturn(new UserProfile());
+        Mockito.when(userProfileRepository.findByUserId("223")).thenReturn(Optional.empty());
+        Mockito.when(userProfileRepository.save(ArgumentMatchers.any(UserProfile.class))).thenReturn(new UserProfile());
 
         assertThat(profileService.createProfile(user)).isNotNull();
-        verify(userProfileRepository).save(userProfileCaptor.capture());
+        Mockito.verify(userProfileRepository).save(userProfileCaptor.capture());
 
         UserProfile profile = userProfileCaptor.getValue();
         assertThat(profile.getEmail()).isEqualTo(user.getEmail());
