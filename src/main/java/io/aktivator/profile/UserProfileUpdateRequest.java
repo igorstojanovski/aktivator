@@ -10,6 +10,5 @@ import lombok.Setter;
 public class UserProfileUpdateRequest {
     private String name;
     private String surname;
-    private String email;
     private String username;
 }
