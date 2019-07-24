@@ -1,6 +1,5 @@
-package io.aktivator.repositories;
+package io.aktivator.profile;
 
-import io.aktivator.model.UserProfile;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

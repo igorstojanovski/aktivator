@@ -26,8 +26,12 @@ public class UserService {
 
     public UserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         KeycloakPrincipal principal = (KeycloakPrincipal) auth.getPrincipal();
+
+        return getUserDto(principal);
+    }
+
+    public UserDTO getUserDto(KeycloakPrincipal principal) {
         AccessToken accessToken = principal.getKeycloakSecurityContext().getToken();
         String username = accessToken.getPreferredUsername();
         String emailID = accessToken.getEmail();
@@ -35,13 +39,13 @@ public class UserService {
         String firstName = accessToken.getGivenName();
         accessToken.getId();
 
-        UserDTO response = new UserDTO();
-        response.setUsername(username);
-        response.setId(principal.getName());
-        response.setName(firstName);
-        response.setSurname(lastName);
-        response.setEmail(emailID);
-        return response;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setId(principal.getName());
+        userDTO.setName(firstName);
+        userDTO.setSurname(lastName);
+        userDTO.setEmail(emailID);
+        return userDTO;
     }
 
     public UserDTO getUser(String userId) throws DataException {

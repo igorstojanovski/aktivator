@@ -1,31 +1,33 @@
-package io.aktivator.services;
+package io.aktivator.profile;
 
 import io.aktivator.model.DataException;
 import io.aktivator.model.UserDTO;
-import io.aktivator.model.UserProfile;
-import io.aktivator.repositories.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class ProfileService {
+class ProfileService {
 
     private final UserProfileRepository repository;
 
     @Autowired
-    public ProfileService(UserProfileRepository repository) {
+    ProfileService(UserProfileRepository repository) {
         this.repository = repository;
     }
 
     private boolean exists(String userId) {
-        return repository.findByUserId(userId).isPresent();
+        Optional<UserProfile> byUserId = repository.findByUserId(userId);
+        return byUserId.isPresent();
     }
 
-    public UserProfile createProfile(UserDTO user) throws DataException {
+    UserProfile createProfile(UserDTO user) throws DataException {
         if (exists(user.getId())) {
             throw new DataException("Profile for ID " + user.getId() + " already exists.");
         } else {
             UserProfile userProfile = new UserProfile();
+            userProfile.setUserId(user.getId());
             userProfile.setName(user.getName());
             userProfile.setSurname(user.getSurname());
             userProfile.setEmail(user.getEmail());
@@ -33,5 +35,13 @@ public class ProfileService {
 
             return repository.save(userProfile);
         }
+    }
+
+    UserProfile getProfile(String userId) throws DataException {
+        return repository.findByUserId(userId).orElseThrow(() -> new DataException("Profile doesn't exist"));
+    }
+
+    UserProfile updateProfile(UserProfile editedProfile) {
+        return repository.save(editedProfile);
     }
 }

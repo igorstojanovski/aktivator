@@ -1,22 +1,20 @@
-package io.aktivator.services;
+package io.aktivator.profile;
 
 import io.aktivator.model.DataException;
 import io.aktivator.model.UserDTO;
-import io.aktivator.model.UserProfile;
-import io.aktivator.repositories.UserProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,7 +48,7 @@ class ProfileServiceTest {
     @Test
     void shouldSaveCorrectObject() throws DataException {
         when(userProfileRepository.findByUserId("223")).thenReturn(Optional.empty());
-        when(userProfileRepository.save(any(UserProfile.class))).thenReturn(new UserProfile());
+        when(userProfileRepository.save(ArgumentMatchers.any(UserProfile.class))).thenReturn(new UserProfile());
 
         assertThat(profileService.createProfile(user)).isNotNull();
         verify(userProfileRepository).save(userProfileCaptor.capture());
@@ -60,5 +58,43 @@ class ProfileServiceTest {
         assertThat(profile.getName()).isEqualTo(user.getName());
         assertThat(profile.getSurname()).isEqualTo(user.getSurname());
         assertThat(profile.getUsername()).isEqualTo(user.getUsername());
+    }
+
+    @Test
+    void shouldThrowWhenUserExists() {
+        when(userProfileRepository.findByUserId(user.getId())).thenReturn(Optional.of(new UserProfile()));
+        assertThrows(DataException.class, () -> profileService.createProfile(user));
+    }
+
+    @Test
+    void shouldUpdateProfile() {
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUsername("dummy");
+
+        UserProfile savedProfile = new UserProfile();
+        savedProfile.setUsername("dummySaved");
+
+        when(userProfileRepository.save(userProfile)).thenReturn(savedProfile);
+
+        UserProfile profile = profileService.updateProfile(userProfile);
+        assertThat(profile.getUsername()).isEqualTo(savedProfile.getUsername());
+    }
+
+    @Test
+    void shouldReturnProfileForUserId() throws DataException {
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUsername("dummy");
+
+        when(userProfileRepository.findByUserId("123")).thenReturn(Optional.of(userProfile));
+        UserProfile profile = profileService.getProfile("123");
+
+        assertThat(profile.getUsername()).isEqualTo(userProfile.getUsername());
+    }
+
+    @Test
+    void shouldThrowWhenUserProfileForUserIdDoesNotExist() throws DataException {
+        when(userProfileRepository.findByUserId("123")).thenReturn(Optional.empty());
+
+        assertThrows(DataException.class, () -> profileService.getProfile("123"));
     }
 }
