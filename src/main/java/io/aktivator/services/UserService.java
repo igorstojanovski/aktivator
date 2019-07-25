@@ -2,6 +2,7 @@ package io.aktivator.services;
 
 import io.aktivator.model.DataException;
 import io.aktivator.model.UserDTO;
+import io.aktivator.profile.ProfileType;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -9,10 +10,13 @@ import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -26,12 +30,18 @@ public class UserService {
 
     public UserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        KeycloakPrincipal principal = (KeycloakPrincipal) auth.getPrincipal();
-
-        return getUserDto(principal);
+        return getUserDto((KeycloakPrincipal) auth.getPrincipal(), auth.getAuthorities());
     }
 
-    public UserDTO getUserDto(KeycloakPrincipal principal) {
+    private UserDTO getUserDto(KeycloakPrincipal principal, Collection<? extends GrantedAuthority> authorities) {
+
+        List<ProfileType> roles = authorities.stream()
+                .map(a -> a.getAuthority().toUpperCase())
+                .filter(a -> a.indexOf('_') == a.lastIndexOf('_'))
+                .map(a -> a.split("ROLE_")[1])
+                .map(ProfileType::valueOf)
+                .collect(Collectors.toList());
+
         AccessToken accessToken = principal.getKeycloakSecurityContext().getToken();
         String username = accessToken.getPreferredUsername();
         String emailID = accessToken.getEmail();
@@ -45,6 +55,7 @@ public class UserService {
         userDTO.setName(firstName);
         userDTO.setSurname(lastName);
         userDTO.setEmail(emailID);
+        userDTO.setTypes(roles);
         return userDTO;
     }
 

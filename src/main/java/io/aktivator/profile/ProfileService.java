@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static io.aktivator.profile.ProfileType.ACTIVIST;
+
 @Service
 class ProfileService {
 
@@ -32,8 +34,17 @@ class ProfileService {
             userProfile.setSurname(user.getSurname());
             userProfile.setEmail(user.getEmail());
             userProfile.setUsername(user.getUsername());
+            userProfile.setTypes(user.getTypes());
+
+            setInactiveWhenActivist(userProfile);
 
             return repository.save(userProfile);
+        }
+    }
+
+    private void setInactiveWhenActivist(UserProfile userProfile) {
+        if (userProfile.getTypes().contains(ACTIVIST)) {
+            userProfile.setActive(false);
         }
     }
 

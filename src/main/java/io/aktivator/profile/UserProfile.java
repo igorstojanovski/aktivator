@@ -4,10 +4,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +30,12 @@ class UserProfile {
     private String surname;
     private String email;
     private String username;
+    @ElementCollection(targetClass = ProfileType.class)
+    @JoinTable(name = "userTypes", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "userType", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private List<ProfileType> types;
+    private boolean isActive;
 
     @Override
     public boolean equals(Object o) {

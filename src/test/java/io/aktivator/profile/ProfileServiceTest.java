@@ -11,6 +11,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -37,6 +38,7 @@ class ProfileServiceTest {
         user.setSurname("Stojanovski");
         user.setEmail("igorce@gmail.com");
         user.setUsername("igorski");
+        user.setTypes(Collections.singletonList(ProfileType.ACTIVIST));
     }
 
     @Test

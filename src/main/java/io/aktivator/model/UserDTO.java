@@ -1,11 +1,16 @@
 package io.aktivator.model;
 
+import io.aktivator.profile.ProfileType;
+
+import java.util.List;
+
 public class UserDTO {
     private String id;
     private String name;
     private String surname;
     private String email;
     private String username;
+    private List<ProfileType> types;
 
     public String getId() {
         return id;
@@ -45,5 +50,13 @@ public class UserDTO {
 
     public String getUsername() {
         return username;
+    }
+
+    public List<ProfileType> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<ProfileType> types) {
+        this.types = types;
     }
 }
