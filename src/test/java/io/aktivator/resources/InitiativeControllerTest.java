@@ -1,8 +1,8 @@
 package io.aktivator.resources;
 
-import io.aktivator.services.InitiativeService;
 import io.aktivator.model.Initiative;
 import io.aktivator.model.UserDTO;
+import io.aktivator.services.InitiativeService;
 import io.aktivator.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

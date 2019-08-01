@@ -1,15 +1,14 @@
 package io.aktivator.services;
 
 import io.aktivator.model.DataException;
-import io.aktivator.repositories.InitiativeRepository;
 import io.aktivator.model.Initiative;
+import io.aktivator.repositories.InitiativeRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import org.junit.jupiter.api.Assertions;
 
 import java.util.Optional;
 

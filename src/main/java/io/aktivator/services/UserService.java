@@ -9,10 +9,12 @@ import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -28,10 +30,17 @@ public class UserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         KeycloakPrincipal principal = (KeycloakPrincipal) auth.getPrincipal();
 
-        return getUserDto(principal);
+
+        List<String> authorities = auth.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .map(String::toUpperCase)
+            .map(s -> s.split("_")[1])
+            .collect(Collectors.toList());
+
+        return getUserDto(principal, authorities);
     }
 
-    public UserDTO getUserDto(KeycloakPrincipal principal) {
+    public UserDTO getUserDto(KeycloakPrincipal principal, List<String> authorities) {
         AccessToken accessToken = principal.getKeycloakSecurityContext().getToken();
         String username = accessToken.getPreferredUsername();
         String emailID = accessToken.getEmail();
@@ -45,6 +54,7 @@ public class UserService {
         userDTO.setName(firstName);
         userDTO.setSurname(lastName);
         userDTO.setEmail(emailID);
+        userDTO.setAuthorities(authorities);
         return userDTO;
     }
 

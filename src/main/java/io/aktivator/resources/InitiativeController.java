@@ -1,8 +1,8 @@
 package io.aktivator.resources;
 
+import io.aktivator.model.Initiative;
 import io.aktivator.model.UserDTO;
 import io.aktivator.services.InitiativeService;
-import io.aktivator.model.Initiative;
 import io.aktivator.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
