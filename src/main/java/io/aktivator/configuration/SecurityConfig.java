@@ -31,7 +31,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     public SecurityConfig(KeycloakClientRequestFactory keycloakClientRequestFactory) {
         this.keycloakClientRequestFactory = keycloakClientRequestFactory;
-
         //to use principal and authentication together with @async
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 
@@ -93,7 +92,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .sessionAuthenticationStrategy(sessionAuthenticationStrategy())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/*").hasRole("user")
+            .antMatchers("/api/*").hasAnyRole("user", "uma_authorization")
                 .antMatchers("/admin/*").hasRole("admin")
                 .anyRequest().permitAll();
     }
