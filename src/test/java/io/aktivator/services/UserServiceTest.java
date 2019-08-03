@@ -48,7 +48,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void shouldGetUserById() throws DataException {
+    void shouldGetUserById() throws DataException {
         userRepresentations.add(userRepresentation);
 
         when(userRepresentation.getUsername()).thenReturn("igorce");
@@ -64,7 +64,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenNoUserWasFound() {
+    void shouldThrowExceptionWhenNoUserWasFound() {
         when(usersResource.search("223")).thenReturn(Collections.emptyList());
         assertThrows(DataException.class, () -> userService.getUser("223"));
     }
