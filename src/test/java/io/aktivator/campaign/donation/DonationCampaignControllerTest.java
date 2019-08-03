@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -19,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,6 +87,14 @@ class DonationCampaignControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(entity);
+    }
+
+    @Test
+    void shouldGoTosServiceToGetPagedResults() {
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
+        controller.getAllCampaigns(pageable);
+
+        verify(donationCampaignService).getAllCampaigns(pageable);
     }
 
     private Date convertLocalDateToDate(LocalDate myLocalDate) {

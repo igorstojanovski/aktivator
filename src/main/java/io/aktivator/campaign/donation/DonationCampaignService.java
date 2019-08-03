@@ -2,6 +2,8 @@ package io.aktivator.campaign.donation;
 
 import io.aktivator.model.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,5 +35,9 @@ class DonationCampaignService {
         entity.setOwnerId(request.getOwnerId());
 
         return entity;
+    }
+
+    public Page<DonationCampaignEntity> getAllCampaigns(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }

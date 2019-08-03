@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -25,16 +28,13 @@ class DonationCampaignServiceTest {
     private DonationCampaignService service;
     private DonationCampaignEntity entity;
     private DonationCampaignCreateRequest createRequest;
-    private Date created;
-    private Date startDate;
-    private Date endDate;
 
     @BeforeEach
     void setupTest() {
         service = new DonationCampaignService(repository);
-        created = new Date();
-        startDate = new Date();
-        endDate = convertLocalDateToDate(LocalDate.now().plusDays(30));
+        Date created = new Date();
+        Date startDate = new Date();
+        Date endDate = convertLocalDateToDate(LocalDate.now().plusDays(30));
 
         entity = new DonationCampaignEntity();
         entity.setTarget(2000L);
@@ -78,5 +78,13 @@ class DonationCampaignServiceTest {
     void shouldThrowWhenCampaignDoesNotExist() {
         when(repository.findById(123L)).thenReturn(Optional.empty());
         Assertions.assertThrows(DataException.class, () -> service.getCampaign(123L));
+    }
+
+    @Test
+    void shouldGoToRepoToGetAllCampaigns() {
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
+        service.getAllCampaigns(pageable);
+
+        verify(repository).findAll(pageable);
     }
 }
