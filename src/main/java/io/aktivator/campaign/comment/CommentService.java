@@ -1,8 +1,6 @@
-package io.aktivator.services;
+package io.aktivator.campaign.comment;
 
 import io.aktivator.model.DataException;
-import io.aktivator.repositories.CommentRepository;
-import io.aktivator.model.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

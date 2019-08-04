@@ -1,9 +1,7 @@
-package io.aktivator.services;
+package io.aktivator.campaign.comment;
 
-import io.aktivator.model.Comment;
+import io.aktivator.campaign.Campaign;
 import io.aktivator.model.DataException;
-import io.aktivator.repositories.CommentRepository;
-import io.aktivator.model.Initiative;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,19 +25,19 @@ class CommentServiceTest {
     @Captor
     private ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
     private CommentService commentService;
-    private Initiative initiative;
+    private Campaign campaign;
     private Comment comment;
 
     @BeforeEach
     void beforeEach() {
         commentService = new CommentService(commentRepository);
 
-        initiative = new Initiative();
-        initiative.setId(2L);
+        campaign = new Campaign();
+        campaign.setId(2L);
 
         comment = new Comment();
         comment.setText("This is the comment.");
-        comment.setInitiative(initiative);
+        comment.setCampaign(campaign);
         comment.setOwner("223");
     }
 
@@ -48,7 +46,7 @@ class CommentServiceTest {
 
         Comment createdComment = new Comment();
         createdComment.setText("This is the comment.");
-        createdComment.setInitiative(initiative);
+        createdComment.setCampaign(campaign);
         createdComment.setOwner("223");
         createdComment.setId(3L);
 

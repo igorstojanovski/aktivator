@@ -1,6 +1,7 @@
-package io.aktivator.model;
+package io.aktivator.campaign.comment;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.aktivator.campaign.Campaign;
 import io.aktivator.configuration.json.UserIdSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class Comment {
     @Column(nullable = false)
     private String text;
     @ManyToOne
-    private Initiative initiative;
+    private Campaign campaign;
     @Column(nullable = false)
     private Date date;
     private boolean visible = true;
@@ -42,12 +43,12 @@ public class Comment {
         return Objects.equals(id, comment.id) &&
             owner.equals(comment.owner) &&
             text.equals(comment.text) &&
-            initiative.equals(comment.initiative) &&
+                campaign.equals(comment.campaign) &&
             date.equals(comment.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, owner, text, initiative, date);
+        return Objects.hash(id, owner, text, campaign, date);
     }
 }

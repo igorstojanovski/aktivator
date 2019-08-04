@@ -46,10 +46,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
      * registers the Keycloakauthenticationprovider in spring context
      * and sets its mapping strategy for roles/authorities (mapping to spring seccurities' default ROLE_... for authorities ).
      * @param auth SecurityBuilder to build authentications and add details like authproviders etc.
-     * @throws Exception
      */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
         KeycloakAuthenticationProvider keyCloakAuthProvider = keycloakAuthenticationProvider();
         keyCloakAuthProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
 

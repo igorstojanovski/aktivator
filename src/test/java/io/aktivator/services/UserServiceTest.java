@@ -25,7 +25,7 @@ class UserServiceTest {
 
     private UserService userService;
     @Mock
-    private KeycloakClient kecloakClient;
+    private KeycloakClient keycloakClient;
     @Mock
     private Keycloak keycloak;
     @Mock
@@ -40,8 +40,8 @@ class UserServiceTest {
     public void beforeEach() {
         userRepresentations = new ArrayList<>();
 
-        userService = new UserService(kecloakClient);
-        when(kecloakClient.getKeycloak()).thenReturn(keycloak);
+        userService = new UserService(keycloakClient);
+        when(keycloakClient.getKeycloak()).thenReturn(keycloak);
         when(keycloak.realm("aktivator-test")).thenReturn(realmResource);
         when(realmResource.users()).thenReturn(usersResource);
         when(usersResource.search("223")).thenReturn(userRepresentations);
