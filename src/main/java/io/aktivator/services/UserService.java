@@ -40,7 +40,7 @@ public class UserService {
         return getUserDto(principal, authorities);
     }
 
-    public UserDTO getUserDto(KeycloakPrincipal principal, List<String> authorities) {
+    private UserDTO getUserDto(KeycloakPrincipal principal, List<String> authorities) {
         AccessToken accessToken = principal.getKeycloakSecurityContext().getToken();
         String username = accessToken.getPreferredUsername();
         String emailID = accessToken.getEmail();

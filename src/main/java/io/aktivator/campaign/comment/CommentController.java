@@ -1,11 +1,8 @@
-package io.aktivator.resources;
+package io.aktivator.campaign.comment;
 
-import io.aktivator.model.Comment;
+import io.aktivator.campaign.CampaignService;
 import io.aktivator.model.DataException;
 import io.aktivator.model.UserDTO;
-import io.aktivator.model.commands.CommentCreateCommand;
-import io.aktivator.services.CommentService;
-import io.aktivator.services.InitiativeService;
 import io.aktivator.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,16 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/api/campaign/comment")
 public class CommentController {
 
-    private final InitiativeService initiativeService;
+    private final CampaignService campaignService;
     private final CommentService commentService;
     private final UserService userService;
 
     @Autowired
-    public CommentController(InitiativeService initiativeService, CommentService commentService, UserService userService) {
-        this.initiativeService = initiativeService;
+    public CommentController(CampaignService campaignService, CommentService commentService, UserService userService) {
+        this.campaignService = campaignService;
         this.commentService = commentService;
         this.userService = userService;
     }
@@ -37,7 +34,7 @@ public class CommentController {
         UserDTO user = userService.getCurrentUser();
         Comment comment = new Comment();
         try {
-            comment.setInitiative(initiativeService.getInitiative(commentCreateCommand.getInitiativeId()));
+            comment.setCampaign(campaignService.getCampaign(commentCreateCommand.getCampaignId()));
             comment.setText(commentCreateCommand.getText());
             comment.setDate(commentCreateCommand.getDate());
             comment.setOwner(user.getId());

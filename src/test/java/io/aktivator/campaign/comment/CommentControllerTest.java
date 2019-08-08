@@ -1,12 +1,9 @@
-package io.aktivator.resources;
+package io.aktivator.campaign.comment;
 
-import io.aktivator.model.commands.CommentCreateCommand;
-import io.aktivator.services.InitiativeService;
-import io.aktivator.model.Comment;
+import io.aktivator.campaign.Campaign;
+import io.aktivator.campaign.CampaignService;
 import io.aktivator.model.DataException;
-import io.aktivator.model.Initiative;
 import io.aktivator.model.UserDTO;
-import io.aktivator.services.CommentService;
 import io.aktivator.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,46 +24,47 @@ class CommentControllerTest {
     @Mock
     private CommentService commentService;
     @Mock
-    private InitiativeService initiativeService;
+    private CampaignService campaignService;
     @Mock
     private UserService userService;
+
     private CommentController commentController;
     public CommentCreateCommand createCommand;
     public static final Date DATE = new Date();
 
     @BeforeEach
     public void beforeEach() {
-        commentController = new CommentController(initiativeService, commentService, userService);
+        commentController = new CommentController(campaignService, commentService, userService);
         UserDTO user = new UserDTO();
         user.setId("223");
 
         when(userService.getCurrentUser()).thenReturn(user);
         createCommand = new CommentCreateCommand();
         createCommand.setDate(DATE);
-        createCommand.setInitiativeId(1L);
+        createCommand.setCampaignId(1L);
         createCommand.setText("This is the comment.");
     }
 
     @Test
     void shouldAddNewComment() throws DataException {
 
-        Initiative initiative = new Initiative();
+        Campaign initiative = new Campaign();
         initiative.setId(1L);
 
         Comment comment = new Comment();
         comment.setText("This is the comment.");
-        comment.setInitiative(initiative);
+        comment.setCampaign(initiative);
         comment.setOwner("223");
         comment.setDate(DATE);
 
         Comment createdComment = new Comment();
         createdComment.setText("This is the comment.");
-        createdComment.setInitiative(initiative);
+        createdComment.setCampaign(initiative);
         createdComment.setOwner("223");
         createdComment.setId(3L);
         createdComment.setDate(DATE);
 
-        when(initiativeService.getInitiative(1L)).thenReturn(initiative);
+        when(campaignService.getCampaign(1L)).thenReturn(initiative);
         when(commentService.createComment(comment)).thenReturn(createdComment);
 
         ResponseEntity<Comment> response = commentController.addComment(createCommand);
@@ -76,7 +74,7 @@ class CommentControllerTest {
 
     @Test
     void shouldReturn404WhenInitiativeNotFound() throws DataException {
-        when(initiativeService.getInitiative(1L)).thenThrow(new DataException("Missing initiative"));
+        when(campaignService.getCampaign(1L)).thenThrow(new DataException("Missing campaign"));
         ResponseEntity<Comment> response = commentController.addComment(createCommand);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

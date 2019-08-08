@@ -1,6 +1,5 @@
-package io.aktivator.model.commands;
+package io.aktivator.campaign.comment;
 
-import io.aktivator.model.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +14,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class CommentCreateCommand {
     private String text;
-    private Long initiativeId;
+    private Long campaignId;
     private Date date;
 }

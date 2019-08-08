@@ -1,6 +1,5 @@
-package io.aktivator.repositories;
+package io.aktivator.campaign.comment;
 
-import io.aktivator.model.Comment;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface CommentRepository extends PagingAndSortingRepository<Comment, Long> {
