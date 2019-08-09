@@ -1,7 +1,8 @@
-package io.aktivator.profile;
+package io.aktivator.campaign.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aktivator.extensions.KeycloakExtension;
+import io.aktivator.profile.TestParameter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +14,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({SpringExtension.class, KeycloakExtension.class})
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProfileIT {
+class CommentControllerIT {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void shouldRunAsTest(@TestParameter("admin_token") String token) throws Exception {
+    public void shouldCreateComment(@TestParameter("admin_token") String token) throws Exception {
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
             .get("/api/profile/current")
@@ -37,8 +37,5 @@ public class ProfileIT {
             .andExpect(status().isOk())
             .andReturn();
 
-        Profile profile = OBJECT_MAPPER.readValue(result.getResponse().getContentAsString(), Profile.class);
-        assertThat(profile.getName()).isEqualTo("John");
-        assertThat(profile.getSurname()).isEqualTo("Doe");
     }
 }

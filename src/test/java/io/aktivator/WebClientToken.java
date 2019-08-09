@@ -12,19 +12,17 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@Component
-@Scope("singleton")
 public class WebClientToken {
 
     private final String realm;
@@ -35,21 +33,26 @@ public class WebClientToken {
     private final Keycloak keycloak;
 
     @Autowired
-    public WebClientToken(@Value("${keycloak.auth-server-url}") String serverUrl,
-                          @Value("${keycloak.realm}") String realm,
-                          @Value("${aktivator.keycloak.resource-web-test}") String client,
-                          @Value("${aktivator.keycloak.credentials.secret-web-test}") String secret,
-                          @Value("${aktivator.keycloak.user}") String keycloakUser,
-                          @Value("${aktivator.keycloak.password}") String keycloakPassword) {
-        this.realm = realm;
-        this.client = client;
-        this.serverUrl = serverUrl;
-        this.secret = secret;
+    public WebClientToken() {
+
+        Properties properties = new Properties();
+        try (InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("application.properties")) {
+            properties.load(in);
+            System.out.println(properties);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.realm = properties.getProperty("keycloak.realm");
+        this.client = properties.getProperty("aktivator.keycloak.resource-web-test");
+        this.serverUrl = properties.getProperty("keycloak.auth-server-url");
+        this.secret = System.getenv("AKT_WEB_DEV_CLIENT_SECRET");
+
         keycloak = KeycloakBuilder.builder()
             .serverUrl(serverUrl)
             .realm(realm)
-            .username(keycloakUser)
-            .password(keycloakPassword)
+            .username(System.getenv("AKT_USER"))
+            .password(System.getenv("AKT_PASSWORD"))
             .clientId(client)
             .clientSecret(secret)
             .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(20).build())
@@ -70,7 +73,6 @@ public class WebClientToken {
             .build();
 
         return local.tokenManager().getAccessToken().getToken();
-
     }
 
     public String getValue() {
