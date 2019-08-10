@@ -12,4 +12,5 @@ class Profile {
     private String surname;
     private String email;
     private String username;
+    private ExtendedProfile extendedProfile;
 }

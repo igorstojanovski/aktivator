@@ -16,11 +16,13 @@ class ProfileControllerTest {
 
     @Mock
     private ProfileService profileService;
+    @Mock
+    private ExternalUserService externalUserService;
     private ProfileController profileController;
 
     @BeforeEach
     public void setupTest() {
-        profileController = new ProfileController(profileService);
+        profileController = new ProfileController(profileService, externalUserService);
     }
 
     @Test
