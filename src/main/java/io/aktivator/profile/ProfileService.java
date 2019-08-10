@@ -42,6 +42,7 @@ class ProfileService {
 
     Profile getPublicProfile(String ownerId) {
         ExtendedProfile extendedProfile = extendedProfileRepository.findByOwnerId(ownerId).orElseThrow();
+        extendedProfile.setOwnerId("");
         UserDTO userDTO = externaluserService.getUser(ownerId);
         Profile profile = getProfileFromUser(userDTO);
         profile.setEmail("");
@@ -49,7 +50,7 @@ class ProfileService {
         return profile;
     }
 
-    public ExtendedProfile updateProfile(ProfileUpdateRequest profileUpdateRequest) {
+    void updateProfile(ProfileUpdateRequest profileUpdateRequest) {
         UserDTO currentUser = userService.getCurrentUser();
         externaluserService.editUser(profileUpdateRequest, currentUser.getId());
 
@@ -57,6 +58,6 @@ class ProfileService {
             .orElse(new ExtendedProfile());
         extendedProfile.setStory(profileUpdateRequest.getStory());
         extendedProfile.setOwnerId(currentUser.getId());
-        return extendedProfileRepository.save(extendedProfile);
+        extendedProfileRepository.save(extendedProfile);
     }
 }
