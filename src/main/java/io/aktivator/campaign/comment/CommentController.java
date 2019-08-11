@@ -40,7 +40,7 @@ public class CommentController {
         UserDTO user = userService.getCurrentUser();
         Comment comment = new Comment();
         try {
-            comment.setCampaign(campaignService.getCampaign(commentCreateCommand.getCampaignId()));
+            comment.setCampaign(campaignService.getCampaign(campaignId));
             comment.setText(commentCreateCommand.getText());
             comment.setDate(commentCreateCommand.getDate());
             comment.setOwner(user.getId());

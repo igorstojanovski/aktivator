@@ -12,8 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CommentCreateCommand {
+class CommentCreateCommand {
     private String text;
-    private Long campaignId;
     private Date date;
 }

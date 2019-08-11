@@ -41,7 +41,6 @@ class CommentControllerTest {
         when(userService.getCurrentUser()).thenReturn(user);
         createCommand = new CommentCreateCommand();
         createCommand.setDate(DATE);
-        createCommand.setCampaignId(1L);
         createCommand.setText("This is the comment.");
     }
 
