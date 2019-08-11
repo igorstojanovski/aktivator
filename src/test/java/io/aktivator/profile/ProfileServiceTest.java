@@ -76,6 +76,17 @@ class ProfileServiceTest {
     }
 
     @Test
+    void shouldCreateEmptyExtendedProfileWhenNotFoundInDatabase() {
+
+        when(extendedProfileRepository.findByOwnerId("123")).thenReturn(Optional.empty());
+        when(externalUserService.getUser("123")).thenReturn(userDTO);
+
+        Profile profile = profileService.getPublicProfile("123");
+        assertThat(profile.getExtendedProfile().getOwnerId()).isEmpty();
+        assertThat(profile.getExtendedProfile().getStory()).isNull();
+    }
+
+    @Test
     void shouldUpdateBothProfileInfoSources() {
         ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest();
         profileUpdateRequest.setFirstName("Johnny");

@@ -41,7 +41,7 @@ class ProfileService {
     }
 
     Profile getPublicProfile(String ownerId) {
-        ExtendedProfile extendedProfile = extendedProfileRepository.findByOwnerId(ownerId).orElseThrow();
+        ExtendedProfile extendedProfile = extendedProfileRepository.findByOwnerId(ownerId).orElse(new ExtendedProfile());
         extendedProfile.setOwnerId("");
         UserDTO userDTO = externaluserService.getUser(ownerId);
         Profile profile = getProfileFromUser(userDTO);
