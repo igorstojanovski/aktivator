@@ -60,7 +60,7 @@ public class KeycloakService implements ExternalUserService {
         UserRepresentation representation = userResource.get(ownerId).toRepresentation();
         userDTO.setName(representation.getFirstName());
         userDTO.setSurname(representation.getLastName());
-        userDTO.setUsername(representation.getEmail());
+        userDTO.setUsername(representation.getUsername());
         userDTO.setEmail(representation.getEmail());
         userDTO.setId(ownerId);
         return userDTO;

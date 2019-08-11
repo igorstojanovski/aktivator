@@ -1,7 +1,6 @@
 package io.aktivator.campaign.comment;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.aktivator.campaign.Campaign;
 import io.aktivator.configuration.json.UserIdSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,13 +23,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    
     @JsonSerialize(using = UserIdSerializer.class)
     private String owner;
     @Column(nullable = false)
     private String text;
-    @ManyToOne
-    private Campaign campaign;
+    private Long campaignId;
     @Column(nullable = false)
     private Date date;
     private boolean visible = true;
@@ -43,12 +39,12 @@ public class Comment {
         return Objects.equals(id, comment.id) &&
             owner.equals(comment.owner) &&
             text.equals(comment.text) &&
-                campaign.equals(comment.campaign) &&
+            campaignId.equals(comment.campaignId) &&
             date.equals(comment.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, owner, text, campaign, date);
+        return Objects.hash(id, owner, text, campaignId, date);
     }
 }

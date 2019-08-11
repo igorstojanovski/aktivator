@@ -1,6 +1,5 @@
 package io.aktivator.campaign.comment;
 
-import io.aktivator.campaign.Campaign;
 import io.aktivator.model.DataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +8,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
@@ -25,19 +27,14 @@ class CommentServiceTest {
     @Captor
     private ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
     private CommentService commentService;
-    private Campaign campaign;
     private Comment comment;
 
     @BeforeEach
     void beforeEach() {
         commentService = new CommentService(commentRepository);
 
-        campaign = new Campaign();
-        campaign.setId(2L);
-
         comment = new Comment();
         comment.setText("This is the comment.");
-        comment.setCampaign(campaign);
         comment.setOwner("223");
     }
 
@@ -46,7 +43,6 @@ class CommentServiceTest {
 
         Comment createdComment = new Comment();
         createdComment.setText("This is the comment.");
-        createdComment.setCampaign(campaign);
         createdComment.setOwner("223");
         createdComment.setId(3L);
 
@@ -96,5 +92,19 @@ class CommentServiceTest {
     void shouldThrowWhenCommentDesNotExist() {
         when(commentRepository.findById(123L)).thenReturn(Optional.empty());
         assertThrows(DataException.class, () -> commentService.hide(123L));
+    }
+
+    @Test
+    void shouldGetAllComments() {
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
+        commentService.getComments(123L, pageable);
+        verify(commentRepository).findByCampaignId(123L, pageable);
+    }
+
+    @Test
+    void shouldReturnCommentResponseObject() {
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
+        commentService.getComments(123L, pageable);
+        verify(commentRepository).findByCampaignId(123L, pageable);
     }
 }

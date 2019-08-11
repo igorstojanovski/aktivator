@@ -1,6 +1,5 @@
 package io.aktivator.campaign.comment;
 
-import io.aktivator.campaign.CampaignService;
 import io.aktivator.model.DataException;
 import io.aktivator.model.UserDTO;
 import io.aktivator.services.UserService;
@@ -23,13 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/campaign/{campaignId}/comment")
 public class CommentController {
 
-    private final CampaignService campaignService;
     private final CommentService commentService;
     private final UserService userService;
 
     @Autowired
-    public CommentController(CampaignService campaignService, CommentService commentService, UserService userService) {
-        this.campaignService = campaignService;
+    public CommentController(CommentService commentService, UserService userService) {
         this.commentService = commentService;
         this.userService = userService;
     }
@@ -39,17 +36,13 @@ public class CommentController {
                                               @RequestBody CommentCreateCommand commentCreateCommand) {
         UserDTO user = userService.getCurrentUser();
         Comment comment = new Comment();
-        try {
-            comment.setCampaign(campaignService.getCampaign(campaignId));
-            comment.setText(commentCreateCommand.getText());
-            comment.setDate(commentCreateCommand.getDate());
-            comment.setOwner(user.getId());
-            comment = commentService.createComment(comment);
+        comment.setCampaignId(campaignId);
+        comment.setText(commentCreateCommand.getText());
+        comment.setDate(commentCreateCommand.getDate());
+        comment.setOwner(user.getId());
+        comment = commentService.createComment(comment);
 
-            return new ResponseEntity<>(comment, HttpStatus.OK);
-        } catch (DataException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")

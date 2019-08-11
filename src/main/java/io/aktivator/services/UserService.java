@@ -30,7 +30,6 @@ public class UserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         KeycloakPrincipal principal = (KeycloakPrincipal) auth.getPrincipal();
 
-
         List<String> authorities = auth.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .map(String::toUpperCase)
