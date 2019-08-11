@@ -2,28 +2,30 @@ package io.aktivator.campaign.comment;
 
 import io.aktivator.model.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CommentService {
+class CommentService {
 
     private final CommentRepository commentRepository;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository) {
+    CommentService(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
     }
 
-    public Comment createComment(Comment comment) {
+    Comment createComment(Comment comment) {
         return commentRepository.save(comment);
     }
 
-    public boolean isOwner(Long commentId, String userId) throws DataException {
+    boolean isOwner(Long commentId, String userId) throws DataException {
         Comment comment = getComment(commentId);
         return comment.getOwner().equals(userId);
     }
 
-    public Comment hide(Long commentId) throws DataException {
+    Comment hide(Long commentId) throws DataException {
         Comment comment = getComment(commentId);
         comment.setVisible(false);
 
@@ -33,5 +35,9 @@ public class CommentService {
     private Comment getComment(Long commentId) throws DataException {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new DataException("No comment with id: " + commentId));
+    }
+
+    Page<Comment> getComments(Long campaignId, Pageable pageable) {
+        return commentRepository.findByCampaignId(campaignId, pageable);
     }
 }

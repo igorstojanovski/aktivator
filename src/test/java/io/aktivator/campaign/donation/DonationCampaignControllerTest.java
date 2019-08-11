@@ -76,12 +76,13 @@ class DonationCampaignControllerTest {
     }
 
     @Test
-    void shouldGoToServiceToCreateCampaign() {
+    void shouldReturnTheObjectProvidedByTheRepository() {
         UserDTO userDTO = new UserDTO();
         userDTO.setAuthorities(Collections.singletonList(Roles.ACTIVIST.name()));
+        userDTO.setId("23456099");
         when(userService.getCurrentUser()).thenReturn(userDTO);
         DonationCampaignCreateRequest request = new DonationCampaignCreateRequest();
-        when(donationCampaignService.save(request)).thenReturn(entity);
+        when(donationCampaignService.save(request, "23456099")).thenReturn(entity);
 
         ResponseEntity<DonationCampaignEntity> response = controller.createDonationCampaign(request);
 

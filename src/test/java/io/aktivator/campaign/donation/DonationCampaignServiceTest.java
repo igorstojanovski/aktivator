@@ -50,7 +50,6 @@ class DonationCampaignServiceTest {
         createRequest.setCreated(created);
         createRequest.setStartDate(startDate);
         createRequest.setEndDate(endDate);
-        createRequest.setOwnerId("23456099");
         createRequest.setDescription("Quo vadis?!");
         createRequest.setTitle("Latin lessons donation");
     }
@@ -62,7 +61,7 @@ class DonationCampaignServiceTest {
 
     @Test
     void shouldGoToRepoToSave() {
-        service.save(createRequest);
+        service.save(createRequest, "23456099");
         verify(repository).save(entity);
     }
 

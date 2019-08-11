@@ -1,7 +1,7 @@
 package io.aktivator.profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.aktivator.WebClientToken;
+import io.aktivator.extensions.KeycloakExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,27 +13,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static io.aktivator.TestRunConfiguration.DUMMY_PASS;
-import static io.aktivator.TestRunConfiguration.SIMPLE_USER;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, KeycloakExtension.class})
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProfileIT {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     @Autowired
-    private WebClientToken webClientToken;
-    @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void shouldRunAsTest() throws Exception {
-        System.out.println(webClientToken.getValue());
-        String token = webClientToken.getToken(SIMPLE_USER, DUMMY_PASS);
+    void shouldRunAsTest(@TestParameter("admin_token") String token) throws Exception {
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
             .get("/api/profile/current")

@@ -41,7 +41,6 @@ class CommentControllerTest {
         when(userService.getCurrentUser()).thenReturn(user);
         createCommand = new CommentCreateCommand();
         createCommand.setDate(DATE);
-        createCommand.setCampaignId(1L);
         createCommand.setText("This is the comment.");
     }
 
@@ -67,7 +66,7 @@ class CommentControllerTest {
         when(campaignService.getCampaign(1L)).thenReturn(initiative);
         when(commentService.createComment(comment)).thenReturn(createdComment);
 
-        ResponseEntity<Comment> response = commentController.addComment(createCommand);
+        ResponseEntity<Comment> response = commentController.addComment(1L, createCommand);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(createdComment);
     }
@@ -75,28 +74,28 @@ class CommentControllerTest {
     @Test
     void shouldReturn404WhenInitiativeNotFound() throws DataException {
         when(campaignService.getCampaign(1L)).thenThrow(new DataException("Missing campaign"));
-        ResponseEntity<Comment> response = commentController.addComment(createCommand);
+        ResponseEntity<Comment> response = commentController.addComment(1L, createCommand);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     void shouldRemoveCommentForOwner() throws DataException {
         when(commentService.isOwner(123L, "223")).thenReturn(true);
-        ResponseEntity<String> response = commentController.deleteComment(123L);
+        ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     void shouldBe403WhenCommentIsNotOwnedByUser() throws DataException {
         when(commentService.isOwner(123L, "223")).thenReturn(false);
-        ResponseEntity<String> response = commentController.deleteComment(123L);
+        ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     void shouldBe404WhenCommentIdDoesNotExist() throws DataException {
         when(commentService.isOwner(123L, "223")).thenThrow(DataException.class);
-        ResponseEntity<String> response = commentController.deleteComment(123L);
+        ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

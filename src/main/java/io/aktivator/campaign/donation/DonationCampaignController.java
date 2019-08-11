@@ -37,9 +37,7 @@ public class DonationCampaignController {
         if (!currentUser.getAuthorities().contains(Roles.ACTIVIST.name())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
-        createRequest.setOwnerId(currentUser.getId());
-        DonationCampaignEntity saved = donationCampaignService.save(createRequest);
+        DonationCampaignEntity saved = donationCampaignService.save(createRequest, currentUser.getId());
 
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }

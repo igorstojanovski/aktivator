@@ -13,7 +13,6 @@ import java.util.Date;
 class DonationCampaignCreateRequest {
     private String title;
     private String description;
-    private String ownerId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
