@@ -2,6 +2,7 @@ package io.aktivator.profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aktivator.extensions.KeycloakExtension;
+import io.aktivator.profile.entities.Profile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,9 @@
 package io.aktivator.profile;
 
 import io.aktivator.model.UserDTO;
+import io.aktivator.profile.entities.ExtendedProfile;
+import io.aktivator.profile.entities.Profile;
+import io.aktivator.profile.requests.ProfileUpdateRequest;
 import io.aktivator.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

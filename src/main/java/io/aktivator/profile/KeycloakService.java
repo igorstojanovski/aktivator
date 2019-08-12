@@ -1,6 +1,7 @@
 package io.aktivator.profile;
 
 import io.aktivator.model.UserDTO;
+import io.aktivator.profile.requests.ProfileUpdateRequest;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;

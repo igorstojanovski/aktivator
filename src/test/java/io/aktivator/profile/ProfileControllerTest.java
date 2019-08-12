@@ -1,5 +1,7 @@
 package io.aktivator.profile;
 
+import io.aktivator.profile.entities.Profile;
+import io.aktivator.profile.requests.ProfileUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

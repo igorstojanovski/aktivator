@@ -1,5 +1,6 @@
-package io.aktivator.profile;
+package io.aktivator.profile.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 public class ExtendedProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     private String ownerId;
     private String story;

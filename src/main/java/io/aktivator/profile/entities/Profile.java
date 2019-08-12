@@ -1,4 +1,4 @@
-package io.aktivator.profile;
+package io.aktivator.profile.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-class Profile {
+public class Profile {
     private String name;
     private String surname;
     private String email;
