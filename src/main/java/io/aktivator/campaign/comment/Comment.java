@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -31,20 +30,4 @@ public class Comment {
     @Column(nullable = false)
     private Date date;
     private boolean visible = true;
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id) &&
-            owner.equals(comment.owner) &&
-            text.equals(comment.text) &&
-            campaignId.equals(comment.campaignId) &&
-            date.equals(comment.date);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, owner, text, campaignId, date);
-    }
 }

@@ -6,6 +6,8 @@ import io.aktivator.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +35,8 @@ class CommentControllerTest {
     private static final Date DATE = new Date();
     private CommentCreateCommand createCommand;
     private UserDTO user;
+    @Captor
+    private ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
 
     @BeforeEach
     void beforeEach() {
@@ -60,12 +65,22 @@ class CommentControllerTest {
         createdComment.setCampaignId(123L);
         createdComment.setDate(DATE);
 
-        when(commentService.createComment(comment)).thenReturn(createdComment);
+        when(commentService.createComment(any(Comment.class))).thenReturn(createdComment);
         when(userService.getCurrentUser()).thenReturn(user);
 
         ResponseEntity<Comment> response = commentController.addComment(123L, createCommand);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(createdComment);
+        Comment body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body.getId()).isEqualTo(3L);
+        assertThat(body.getOwner()).isEqualTo("223");
+        assertThat(body.getText()).isEqualTo("This is the comment.");
+        assertThat(body.getCampaignId()).isEqualTo(123L);
+
+        verify(commentService).createComment(commentArgumentCaptor.capture());
+        Comment captorValue = commentArgumentCaptor.getValue();
+        assertThat(captorValue.getId()).isNull();
+        assertThat(captorValue.getOwner()).isEqualTo("223");
     }
 
     @Test
