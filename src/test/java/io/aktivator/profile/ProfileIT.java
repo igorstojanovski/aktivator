@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({SpringExtension.class, KeycloakExtension.class})
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProfileIT {
+class ProfileIT {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     @Autowired

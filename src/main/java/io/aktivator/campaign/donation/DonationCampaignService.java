@@ -33,6 +33,7 @@ class DonationCampaignService {
         entity.setStartDate(request.getStartDate());
         entity.setEndDate(request.getEndDate());
         entity.setOwnerId(ownerId);
+        entity.setExternalPaymentMethods(request.getExternalPaymentMethods());
         return entity;
     }
 
