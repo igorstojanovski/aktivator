@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +30,8 @@ class DonationCampaignServiceTest {
     private DonationCampaignService service;
     private DonationCampaignEntity entity;
     private DonationCampaignCreateRequest createRequest;
+    @Captor
+    private ArgumentCaptor<DonationCampaignEntity> entityArgumentCaptor = ArgumentCaptor.forClass(DonationCampaignEntity.class);
 
     @BeforeEach
     void setupTest() {
@@ -62,7 +66,9 @@ class DonationCampaignServiceTest {
     @Test
     void shouldGoToRepoToSave() {
         service.save(createRequest, "23456099");
-        verify(repository).save(entity);
+        verify(repository).save(entityArgumentCaptor.capture());
+
+        assertThat(entityArgumentCaptor.getValue().getTarget()).isEqualTo(2000L);
     }
 
     @Test
