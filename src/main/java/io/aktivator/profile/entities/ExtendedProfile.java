@@ -15,8 +15,8 @@ import javax.persistence.Id;
 public class ExtendedProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
+    @JsonIgnore
     private String ownerId;
     private String story;
 }
