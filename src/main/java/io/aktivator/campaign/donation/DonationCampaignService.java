@@ -36,7 +36,7 @@ class DonationCampaignService {
         return entity;
     }
 
-    public Page<DonationCampaignEntity> getAllCampaigns(Pageable pageable) {
+    Page<DonationCampaignEntity> getAllCampaigns(Pageable pageable) {
         return repository.findAll(pageable);
     }
 }
