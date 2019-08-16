@@ -1,0 +1,18 @@
+aktivator:
+    keycloak:
+        credentials:
+            secret_web_test: ${AKT_WEB_DEV_CLIENT_SECRET}
+        password: ${AKT_PASSWORD}
+        resource_web_test: web-dev
+        user: ${AKT_USER}
+keycloak:
+    auth-server-url: http://35.157.118.243:8080/auth
+    bearer-only: true
+    cors: true
+    credentials:
+        secret: ${AKT_DEV_CLIENT_SECRET}
+    realm: aktivator-test
+    resource: api-dev
+    ssl-required: external
+server:
+    port: 5000
