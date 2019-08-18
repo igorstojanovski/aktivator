@@ -63,4 +63,15 @@ class ProfileService {
         extendedProfile.setOwnerId(currentUser.getId());
         extendedProfileRepository.save(extendedProfile);
     }
+
+    Profile createProfile() {
+        UserDTO currentUser = userService.getCurrentUser();
+        ExtendedProfile extendedProfile = new ExtendedProfile();
+        extendedProfile.setOwnerId(currentUser.getId());
+
+        Profile profile = getProfileFromUser(currentUser);
+        profile.setExtendedProfile(extendedProfileRepository.save(extendedProfile));
+
+        return profile;
+    }
 }

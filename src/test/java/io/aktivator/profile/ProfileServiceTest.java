@@ -36,6 +36,7 @@ class ProfileServiceTest {
     @Captor
     private ArgumentCaptor<ExtendedProfile> extendedProfileCaptor
             = ArgumentCaptor.forClass(ExtendedProfile.class);
+    private ExtendedProfile extendedProfile;
 
     @BeforeEach
     void setupTest() {
@@ -46,6 +47,10 @@ class ProfileServiceTest {
         userDTO.setSurname("Bravo");
         userDTO.setEmail("johnny.bravo@gmail.com");
         userDTO.setUsername("bravo");
+
+        extendedProfile = new ExtendedProfile();
+        extendedProfile.setOwnerId("123");
+        extendedProfile.setStory("Oh momma!");
     }
 
     @Test
@@ -62,10 +67,6 @@ class ProfileServiceTest {
 
     @Test
     void shouldCombineProfilesAndRemoveSensitiveData() {
-
-        ExtendedProfile extendedProfile = new ExtendedProfile();
-        extendedProfile.setOwnerId("123");
-        extendedProfile.setStory("Oh momma!");
 
         when(extendedProfileRepository.findByOwnerId("123")).thenReturn(Optional.of(extendedProfile));
         when(externalUserService.getUser("123")).thenReturn(userDTO);
@@ -105,5 +106,16 @@ class ProfileServiceTest {
 
         ExtendedProfile extendedProfile = extendedProfileCaptor.getValue();
         assertThat(extendedProfile.getStory()).isEqualTo("Oh momma!");
+    }
+
+    @Test
+    void shouldCreateExtendedAndReturnItIncludedInFullProfile() {
+        when(userService.getCurrentUser()).thenReturn(userDTO);
+        when(extendedProfileRepository.save(extendedProfileCaptor.capture())).thenReturn(extendedProfile);
+
+        Profile createdProfile = profileService.createProfile();
+        assertThat(createdProfile.getExtendedProfile()).isNotNull();
+        assertThat(createdProfile.getExtendedProfile().getId()).isEqualTo(extendedProfile.getId());
+        assertThat(extendedProfileCaptor.getValue()).isNotNull();
     }
 }

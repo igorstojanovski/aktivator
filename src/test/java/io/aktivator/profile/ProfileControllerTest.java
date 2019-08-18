@@ -66,4 +66,13 @@ class ProfileControllerTest {
         verify(profileService).updateProfile(updateRequestArgumentCaptor.capture());
         assertThat(updateRequestArgumentCaptor.getValue().getFirstName()).isEqualTo(JOHNNY_BRAVO);
     }
+
+    @Test
+    public void shouldCallService() {
+        Profile profile = new Profile();
+        profile.setName("Johnny");
+        when(profileService.createProfile()).thenReturn(profile);
+
+        assertThat(profileController.createProfile().getBody().getName()).isEqualTo("Johnny");
+    }
 }
