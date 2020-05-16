@@ -1,7 +1,6 @@
 package io.aktivator.campaign.donation;
 
 import io.aktivator.model.DataException;
-import io.aktivator.profile.Roles;
 import io.aktivator.user.model.UserDTO;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,6 @@ public class DonationCampaignController {
     @PostMapping
     public ResponseEntity<DonationCampaignEntity> createDonationCampaign(@RequestBody DonationCampaignCreateRequest createRequest) {
         UserDTO currentUser = userService.getCurrentUser();
-        if (!currentUser.getAuthorities().contains(Roles.ACTIVIST.name())) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
         DonationCampaignEntity saved = donationCampaignService.save(createRequest, currentUser.getId());
 
         return new ResponseEntity<>(saved, HttpStatus.OK);

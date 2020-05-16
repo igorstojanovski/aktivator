@@ -1,7 +1,6 @@
 package io.aktivator.campaign.donation;
 
 import io.aktivator.model.DataException;
-import io.aktivator.profile.Roles;
 import io.aktivator.user.model.UserDTO;
 import io.aktivator.user.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,18 +65,8 @@ class DonationCampaignControllerTest {
     }
 
     @Test
-    void shouldReturn401WhenCreatingUserIsNotActivist() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setAuthorities(Collections.emptyList());
-        when(userService.getCurrentUser()).thenReturn(userDTO);
-        ResponseEntity<DonationCampaignEntity> response = controller.createDonationCampaign(new DonationCampaignCreateRequest());
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-
-    @Test
     void shouldReturnTheObjectProvidedByTheRepository() {
         UserDTO userDTO = new UserDTO();
-        userDTO.setAuthorities(Collections.singletonList(Roles.ACTIVIST.name()));
         userDTO.setId("23456099");
         when(userService.getCurrentUser()).thenReturn(userDTO);
         DonationCampaignCreateRequest request = new DonationCampaignCreateRequest();
