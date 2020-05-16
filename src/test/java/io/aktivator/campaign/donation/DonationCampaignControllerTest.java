@@ -1,9 +1,9 @@
 package io.aktivator.campaign.donation;
 
 import io.aktivator.model.DataException;
-import io.aktivator.model.UserDTO;
 import io.aktivator.profile.Roles;
-import io.aktivator.services.UserService;
+import io.aktivator.user.model.UserDTO;
+import io.aktivator.user.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

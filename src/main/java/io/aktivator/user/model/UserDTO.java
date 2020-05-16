@@ -1,4 +1,4 @@
-package io.aktivator.model;
+package io.aktivator.user.model;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,10 +1,10 @@
 package io.aktivator.profile;
 
-import io.aktivator.model.UserDTO;
 import io.aktivator.profile.entities.ExtendedProfile;
 import io.aktivator.profile.entities.Profile;
 import io.aktivator.profile.requests.ProfileUpdateRequest;
-import io.aktivator.services.UserService;
+import io.aktivator.user.model.UserDTO;
+import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

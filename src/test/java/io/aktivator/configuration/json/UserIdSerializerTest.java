@@ -2,8 +2,8 @@ package io.aktivator.configuration.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import io.aktivator.model.UserDTO;
 import io.aktivator.profile.ExternalUserService;
+import io.aktivator.user.model.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
