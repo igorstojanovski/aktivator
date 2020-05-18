@@ -22,7 +22,7 @@ public class Campaign {
     private Long id;
     private String title;
     private String description;
-    private String ownerId;
+    private String owner;
     @Temporal(TemporalType.DATE)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;

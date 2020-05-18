@@ -1,6 +1,6 @@
 package io.aktivator.campaign.donation;
 
-import io.aktivator.model.DataException;
+import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.UserDTO;
 import io.aktivator.user.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ class DonationCampaignControllerTest {
         entity.setCreated(created);
         entity.setStartDate(startDate);
         entity.setEndDate(endDate);
-        entity.setOwnerId("23456099");
+        entity.setOwner("23456099");
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
     }

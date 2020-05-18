@@ -2,7 +2,7 @@ package io.aktivator.campaign.donation;
 
 import io.aktivator.campaign.donation.payment.ExternalPaymentMethod;
 import io.aktivator.campaign.donation.payment.PaymentType;
-import io.aktivator.model.DataException;
+import io.aktivator.exceptions.DataException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class DonationCampaignServiceTest {
         entity.setCreated(created);
         entity.setStartDate(startDate);
         entity.setEndDate(endDate);
-        entity.setOwnerId("23456099");
+        entity.setOwner("23456099");
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
 

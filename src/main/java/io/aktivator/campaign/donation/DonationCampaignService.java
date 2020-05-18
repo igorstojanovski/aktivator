@@ -1,6 +1,6 @@
 package io.aktivator.campaign.donation;
 
-import io.aktivator.model.DataException;
+import io.aktivator.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +32,7 @@ class DonationCampaignService {
         entity.setCreated(request.getCreated());
         entity.setStartDate(request.getStartDate());
         entity.setEndDate(request.getEndDate());
-        entity.setOwnerId(ownerId);
+        entity.setOwner(ownerId);
         entity.setExternalPaymentMethods(request.getExternalPaymentMethods());
         return entity;
     }

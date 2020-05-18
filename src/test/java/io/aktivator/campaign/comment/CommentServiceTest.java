@@ -1,6 +1,6 @@
 package io.aktivator.campaign.comment;
 
-import io.aktivator.model.DataException;
+import io.aktivator.exceptions.DataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

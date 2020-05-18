@@ -1,6 +1,6 @@
 package io.aktivator.campaign.donation;
 
-import io.aktivator.model.DataException;
+import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.UserDTO;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

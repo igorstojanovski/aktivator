@@ -1,6 +1,6 @@
 package io.aktivator.campaign.comment;
 
-import io.aktivator.model.DataException;
+import io.aktivator.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
