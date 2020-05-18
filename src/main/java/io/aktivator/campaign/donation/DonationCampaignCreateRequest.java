@@ -1,13 +1,11 @@
 package io.aktivator.campaign.donation;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.aktivator.campaign.donation.payment.ExternalPaymentMethod;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,5 +20,4 @@ class DonationCampaignCreateRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date created = new Date();
     private Long target;
-    private List<ExternalPaymentMethod> externalPaymentMethods;
 }

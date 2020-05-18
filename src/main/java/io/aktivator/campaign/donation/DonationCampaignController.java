@@ -26,15 +26,15 @@ public class DonationCampaignController {
     }
 
     @PostMapping
-    public ResponseEntity<DonationCampaignEntity> createDonationCampaign(@RequestBody DonationCampaignCreateRequest createRequest) {
+    public ResponseEntity<DonationCampaign> createDonationCampaign(@RequestBody DonationCampaignCreateRequest createRequest) {
         UserDTO currentUser = userService.getCurrentUser();
-        DonationCampaignEntity saved = donationCampaignService.save(createRequest, currentUser.getId());
+        DonationCampaign saved = donationCampaignService.save(createRequest, currentUser.getId());
 
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
     @GetMapping("/{campaignId}")
-    public ResponseEntity<DonationCampaignEntity> getCampaign(@PathVariable Long campaignId) {
+    public ResponseEntity<DonationCampaign> getCampaign(@PathVariable Long campaignId) {
         try {
             return new ResponseEntity<>(donationCampaignService.getCampaign(campaignId), HttpStatus.OK);
         } catch (DataException e) {
@@ -43,7 +43,7 @@ public class DonationCampaignController {
     }
 
     @GetMapping
-    public Page<DonationCampaignEntity> getAllCampaigns(
+    public Page<DonationCampaign> getAllCampaigns(
         @SortDefault.SortDefaults({
             @SortDefault(sort = "id", direction = Sort.Direction.DESC)
         }) Pageable pageable) {

@@ -30,7 +30,7 @@ class DonationCampaignControllerTest {
     @Mock
     private DonationCampaignService donationCampaignService;
     private DonationCampaignController controller;
-    private DonationCampaignEntity entity;
+    private DonationCampaign entity;
 
     @BeforeEach
     void setupTest() {
@@ -39,7 +39,7 @@ class DonationCampaignControllerTest {
         Date startDate = new Date();
         @NotNull Date endDate = convertLocalDateToDate(LocalDate.now().plusDays(30));
 
-        entity = new DonationCampaignEntity();
+        entity = new DonationCampaign();
         entity.setTarget(2000L);
         entity.setCreated(created);
         entity.setStartDate(startDate);
@@ -52,7 +52,7 @@ class DonationCampaignControllerTest {
     @Test
     void shouldGoToServiceToGetCampaign() throws DataException {
         when(donationCampaignService.getCampaign(123L)).thenReturn(entity);
-        ResponseEntity<DonationCampaignEntity> response = controller.getCampaign(123L);
+        ResponseEntity<DonationCampaign> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(entity);
     }
@@ -60,7 +60,7 @@ class DonationCampaignControllerTest {
     @Test
     void shouldReturn404WhenCampaignDoesNotExist() throws DataException {
         when(donationCampaignService.getCampaign(123L)).thenThrow(new DataException(""));
-        ResponseEntity<DonationCampaignEntity> response = controller.getCampaign(123L);
+        ResponseEntity<DonationCampaign> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -72,7 +72,7 @@ class DonationCampaignControllerTest {
         DonationCampaignCreateRequest request = new DonationCampaignCreateRequest();
         when(donationCampaignService.save(request, "23456099")).thenReturn(entity);
 
-        ResponseEntity<DonationCampaignEntity> response = controller.createDonationCampaign(request);
+        ResponseEntity<DonationCampaign> response = controller.createDonationCampaign(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(entity);

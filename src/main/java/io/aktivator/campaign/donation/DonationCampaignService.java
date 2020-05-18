@@ -15,17 +15,17 @@ class DonationCampaignService {
         this.repository = repository;
     }
 
-    DonationCampaignEntity getCampaign(Long campaignId) throws DataException {
+    DonationCampaign getCampaign(Long campaignId) throws DataException {
         return repository.findById(campaignId)
                 .orElseThrow(() -> new DataException("No such campaign found."));
     }
 
-    DonationCampaignEntity save(DonationCampaignCreateRequest donationCampaignEntity, String ownerId) {
+    DonationCampaign save(DonationCampaignCreateRequest donationCampaignEntity, String ownerId) {
         return repository.save(creationRequestToEntity(donationCampaignEntity, ownerId));
     }
 
-    private DonationCampaignEntity creationRequestToEntity(DonationCampaignCreateRequest request, String ownerId) {
-        DonationCampaignEntity entity = new DonationCampaignEntity();
+    private DonationCampaign creationRequestToEntity(DonationCampaignCreateRequest request, String ownerId) {
+        DonationCampaign entity = new DonationCampaign();
         entity.setTarget(request.getTarget());
         entity.setTitle(request.getTitle());
         entity.setDescription(request.getDescription());
@@ -33,11 +33,10 @@ class DonationCampaignService {
         entity.setStartDate(request.getStartDate());
         entity.setEndDate(request.getEndDate());
         entity.setOwner(ownerId);
-        entity.setExternalPaymentMethods(request.getExternalPaymentMethods());
         return entity;
     }
 
-    Page<DonationCampaignEntity> getAllCampaigns(Pageable pageable) {
+    Page<DonationCampaign> getAllCampaigns(Pageable pageable) {
         return repository.findAll(pageable);
     }
 }
