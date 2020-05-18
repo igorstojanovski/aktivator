@@ -1,18 +1,25 @@
-aktivator:
-    keycloak:
-        credentials:
-            secret_web_test: ${AKT_WEB_DEV_CLIENT_SECRET}
-        password: ${AKT_PASSWORD}
-        resource_web_test: web-dev
-        user: ${AKT_USER}
-keycloak:
-    auth-server-url: http://35.157.118.243:8080/auth
-    bearer-only: true
-    cors: true
-    credentials:
-        secret: ${AKT_DEV_CLIENT_SECRET}
-    realm: aktivator-test
-    resource: api-dev
-    ssl-required: external
-server:
-    port: 5000
+## MULTIPART (MultipartProperties)
+# Enable multipart uploads
+spring:
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 200MB
+            max-request-size: 215MB
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: https://igorski.eu.auth0.com/
+file:
+    upload-dir: ./uploads
+
+auth0:
+    audience: https://buy-it-api.igorski.co
+amazonProperties:
+    endpointUrl: https://s3.eu-north-1.amazonaws.com
+    downloadUrl: http://s3.eu-north-1.amazonaws.com
+    accessKey: ${AWS_ACESS_KEY}
+    secretKey: ${AWS_SECRET_KEY}
+    bucketName: buy-it-api
