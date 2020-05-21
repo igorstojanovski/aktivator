@@ -11,7 +11,8 @@
 This will start the application and make it accessible at http://localhost:8080
 There are two utility endpoints available:
 
-`http://localhost:8080/h2-console`
+http://localhost:8080/h2-console  
+http://localhost:8080/swagger-ui.html
 
 * To get an access token post:
 
