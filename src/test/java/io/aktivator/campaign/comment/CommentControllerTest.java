@@ -1,7 +1,7 @@
 package io.aktivator.campaign.comment;
 
 import io.aktivator.exceptions.DataException;
-import io.aktivator.user.model.UserDTO;
+import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,14 +34,14 @@ class CommentControllerTest {
     private CommentController commentController;
     private static final Date DATE = new Date();
     private CommentCreateCommand createCommand;
-    private UserDTO user;
+    private User user;
     @Captor
     private ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
 
     @BeforeEach
     void beforeEach() {
         commentController = new CommentController(commentService, userService);
-        user = new UserDTO();
+        user = new User();
         user.setId("223");
 
         createCommand = new CommentCreateCommand();

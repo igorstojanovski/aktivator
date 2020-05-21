@@ -1,7 +1,7 @@
 package io.aktivator.campaign.donation;
 
 import io.aktivator.exceptions.DataException;
-import io.aktivator.user.model.UserDTO;
+import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,9 +66,9 @@ class DonationCampaignControllerTest {
 
     @Test
     void shouldReturnTheObjectProvidedByTheRepository() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId("23456099");
-        when(userService.getCurrentUser()).thenReturn(userDTO);
+        User user = new User();
+        user.setId("23456099");
+        when(userService.getCurrentUser()).thenReturn(user);
         DonationCampaignCreateRequest request = new DonationCampaignCreateRequest();
         when(donationCampaignService.save(request, "23456099")).thenReturn(entity);
 

@@ -1,7 +1,7 @@
 package io.aktivator.campaign.donation;
 
 import io.aktivator.exceptions.DataException;
-import io.aktivator.user.model.UserDTO;
+import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +27,7 @@ public class DonationCampaignController {
 
     @PostMapping
     public ResponseEntity<DonationCampaign> createDonationCampaign(@RequestBody DonationCampaignCreateRequest createRequest) {
-        UserDTO currentUser = userService.getCurrentUser();
+        User currentUser = userService.getCurrentUser();
         DonationCampaign saved = donationCampaignService.save(createRequest, currentUser.getId());
 
         return new ResponseEntity<>(saved, HttpStatus.OK);

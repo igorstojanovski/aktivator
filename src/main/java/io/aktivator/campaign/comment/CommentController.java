@@ -1,7 +1,7 @@
 package io.aktivator.campaign.comment;
 
 import io.aktivator.exceptions.DataException;
-import io.aktivator.user.model.UserDTO;
+import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Comment> addComment(@PathVariable Long campaignId,
                                               @RequestBody CommentCreateCommand commentCreateCommand) {
-        UserDTO user = userService.getCurrentUser();
+        User user = userService.getCurrentUser();
         Comment comment = new Comment();
         comment.setCampaignId(campaignId);
         comment.setText(commentCreateCommand.getText());
@@ -41,7 +41,7 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long campaignId, @PathVariable Long commentId) {
-        UserDTO user = userService.getCurrentUser();
+        User user = userService.getCurrentUser();
         try {
             if (commentService.isOwner(commentId, user.getId())) {
                 commentService.hide(commentId);
