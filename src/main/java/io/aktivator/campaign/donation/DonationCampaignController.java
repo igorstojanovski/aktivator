@@ -26,11 +26,25 @@ public class DonationCampaignController {
     }
 
     @PostMapping
-    public ResponseEntity<DonationCampaign> createDonationCampaign(@RequestBody DonationCampaignCreateRequest createRequest) {
+    public ResponseEntity<DonationCampaign> createDonationCampaign(@RequestBody DonationCampaignDto createRequest) {
+        return createRequest.getId() == null
+                ? saveCampaign(createRequest)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<DonationCampaign> saveCampaign(@RequestBody DonationCampaignDto createRequest) {
+        ResponseEntity<DonationCampaign> donationCampaignResponseEntity;
         User currentUser = userService.getCurrentUser();
         DonationCampaign saved = donationCampaignService.save(createRequest, currentUser.getId());
+        donationCampaignResponseEntity = new ResponseEntity<>(saved, HttpStatus.OK);
+        return donationCampaignResponseEntity;
+    }
 
-        return new ResponseEntity<>(saved, HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<DonationCampaign> updateDonationCampaign(@RequestBody DonationCampaignDto update) {
+        return update.getId() == null
+                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                : saveCampaign(update);
     }
 
     @GetMapping("/{campaignId}")

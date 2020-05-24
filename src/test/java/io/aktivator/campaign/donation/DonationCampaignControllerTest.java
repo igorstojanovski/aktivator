@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,13 +70,45 @@ class DonationCampaignControllerTest {
         User user = new User();
         user.setId("23456099");
         when(userService.getCurrentUser()).thenReturn(user);
-        DonationCampaignCreateRequest request = new DonationCampaignCreateRequest();
+        DonationCampaignDto request = new DonationCampaignDto();
         when(donationCampaignService.save(request, "23456099")).thenReturn(entity);
 
         ResponseEntity<DonationCampaign> response = controller.createDonationCampaign(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(entity);
+    }
+
+    @Test
+    void shouldReturnErrorOnCreateWhenIdIsProvided() {
+        DonationCampaignDto request = new DonationCampaignDto();
+        request.setId(1L);
+
+        ResponseEntity<DonationCampaign> response = controller.createDonationCampaign(request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void shouldUpdateCampaign() {
+        User user = new User();
+        user.setId("23456099");
+        when(userService.getCurrentUser()).thenReturn(user);
+        DonationCampaignDto request = new DonationCampaignDto();
+        request.setId(1L);
+        when(donationCampaignService.save(request, "23456099")).thenReturn(entity);
+
+        ResponseEntity<DonationCampaign> response = controller.updateDonationCampaign(request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(entity);
+    }
+
+    @Test
+    void shouldReturn404WhenCampaignDoesNotHaveId() {
+        DonationCampaignDto request = new DonationCampaignDto();
+        ResponseEntity<DonationCampaign> response = controller.updateDonationCampaign(request);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test

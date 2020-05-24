@@ -29,7 +29,7 @@ class DonationCampaignServiceTest {
     private DonationCampaignRepository repository;
     private DonationCampaignService service;
     private DonationCampaign entity;
-    private DonationCampaignCreateRequest createRequest;
+    private DonationCampaignDto createRequest;
     @Captor
     private ArgumentCaptor<DonationCampaign> entityArgumentCaptor = ArgumentCaptor.forClass(DonationCampaign.class);
 
@@ -49,7 +49,7 @@ class DonationCampaignServiceTest {
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
 
-        createRequest = new DonationCampaignCreateRequest();
+        createRequest = new DonationCampaignDto();
         createRequest.setTarget(2000L);
         createRequest.setCreated(created);
         createRequest.setStartDate(startDate);

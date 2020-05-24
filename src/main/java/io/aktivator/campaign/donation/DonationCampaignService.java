@@ -20,11 +20,11 @@ class DonationCampaignService {
                 .orElseThrow(() -> new DataException("No such campaign found."));
     }
 
-    DonationCampaign save(DonationCampaignCreateRequest donationCampaignEntity, String ownerId) {
+    DonationCampaign save(DonationCampaignDto donationCampaignEntity, String ownerId) {
         return repository.save(creationRequestToEntity(donationCampaignEntity, ownerId));
     }
 
-    private DonationCampaign creationRequestToEntity(DonationCampaignCreateRequest request, String ownerId) {
+    private DonationCampaign creationRequestToEntity(DonationCampaignDto request, String ownerId) {
         DonationCampaign entity = new DonationCampaign();
         entity.setTarget(request.getTarget());
         entity.setTitle(request.getTitle());
