@@ -33,7 +33,7 @@ public class CommentController {
         comment.setCampaignId(campaignId);
         comment.setText(commentCreateCommand.getText());
         comment.setDate(commentCreateCommand.getDate());
-        comment.setOwner(user.getId());
+        comment.setUserId(user.getId());
         comment = commentService.createComment(comment);
 
         return new ResponseEntity<>(comment, HttpStatus.OK);

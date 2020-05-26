@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DonationCampaignControllerTest {
+    public static final Long OWNER_ID = 1L;
     @Mock
     private UserService userService;
     @Mock
@@ -45,7 +46,7 @@ class DonationCampaignControllerTest {
         entity.setCreated(created);
         entity.setStartDate(startDate);
         entity.setEndDate(endDate);
-        entity.setOwner("23456099");
+        entity.setOwnerId(OWNER_ID);
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
     }
@@ -59,7 +60,7 @@ class DonationCampaignControllerTest {
     }
 
     @Test
-    void shouldReturn404WhenCampaignDoesNotExist() throws DataException {
+    void shouldReturnStatus404WhenTheCampaignDoesNotAlreadyExist() throws DataException {
         when(donationCampaignService.getCampaign(123L)).thenThrow(new DataException(""));
         ResponseEntity<DonationCampaign> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -68,10 +69,10 @@ class DonationCampaignControllerTest {
     @Test
     void shouldReturnTheObjectProvidedByTheRepository() {
         User user = new User();
-        user.setId("23456099");
+        user.setId(OWNER_ID);
         when(userService.getCurrentUser()).thenReturn(user);
         DonationCampaignDto request = new DonationCampaignDto();
-        when(donationCampaignService.save(request, "23456099")).thenReturn(entity);
+        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(entity);
 
         ResponseEntity<DonationCampaign> response = controller.createDonationCampaign(request);
 
@@ -92,11 +93,11 @@ class DonationCampaignControllerTest {
     @Test
     void shouldUpdateCampaign() {
         User user = new User();
-        user.setId("23456099");
+        user.setId(OWNER_ID);
         when(userService.getCurrentUser()).thenReturn(user);
         DonationCampaignDto request = new DonationCampaignDto();
         request.setId(1L);
-        when(donationCampaignService.save(request, "23456099")).thenReturn(entity);
+        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(entity);
 
         ResponseEntity<DonationCampaign> response = controller.updateDonationCampaign(request);
 

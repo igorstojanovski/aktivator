@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
 
+    public static final Long USER_ID = 223L;
     @Mock
     private CommentRepository commentRepository;
     @Captor
@@ -35,7 +36,7 @@ class CommentServiceTest {
 
         comment = new Comment();
         comment.setText("This is the comment.");
-        comment.setOwner("223");
+        comment.setUserId(USER_ID);
     }
 
     @Test
@@ -43,7 +44,7 @@ class CommentServiceTest {
 
         Comment createdComment = new Comment();
         createdComment.setText("This is the comment.");
-        createdComment.setOwner("223");
+        createdComment.setUserId(USER_ID);
         createdComment.setId(3L);
 
         when(commentRepository.save(createdComment)).thenReturn(createdComment);
@@ -55,7 +56,7 @@ class CommentServiceTest {
         long commentId = 123L;
         comment.setId(commentId);
         when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
-        assertThat(commentService.isOwner(commentId, "223")).isTrue();
+        assertThat(commentService.isOwner(commentId, USER_ID)).isTrue();
     }
 
     @Test
@@ -63,14 +64,14 @@ class CommentServiceTest {
         long commentId = 123L;
         comment.setId(commentId);
         when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
-        assertThat(commentService.isOwner(commentId, "225")).isFalse();
+        assertThat(commentService.isOwner(commentId, 225L)).isFalse();
     }
 
     @Test
     void shouldThrowWhenCommentDoesNotExit() {
         long commentId = 123L;
         comment.setId(commentId);
-        assertThrows(DataException.class, () -> commentService.isOwner(commentId, "223"));
+        assertThrows(DataException.class, () -> commentService.isOwner(commentId, USER_ID));
     }
 
     @Test

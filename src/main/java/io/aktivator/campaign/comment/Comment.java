@@ -1,6 +1,8 @@
 package io.aktivator.campaign.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.aktivator.configuration.UserIdSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +19,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String owner;
+    @JsonSerialize(converter = UserIdSerializer.class)
+    private Long userId;
     @Column(nullable = false)
     private String text;
     private Long campaignId;

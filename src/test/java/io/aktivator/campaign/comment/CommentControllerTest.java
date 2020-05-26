@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CommentControllerTest {
 
+    public static final Long USER_ID = 223L;
     @Mock
     private CommentService commentService;
     @Mock
@@ -42,7 +43,7 @@ class CommentControllerTest {
     void beforeEach() {
         commentController = new CommentController(commentService, userService);
         user = new User();
-        user.setId("223");
+        user.setId(USER_ID);
 
         createCommand = new CommentCreateCommand();
         createCommand.setDate(DATE);
@@ -55,12 +56,12 @@ class CommentControllerTest {
         Comment comment = new Comment();
         comment.setText("This is the comment.");
         comment.setCampaignId(123L);
-        comment.setOwner("223");
+        comment.setUserId(USER_ID);
         comment.setDate(DATE);
 
         Comment createdComment = new Comment();
         createdComment.setText("This is the comment.");
-        createdComment.setOwner("223");
+        createdComment.setUserId(USER_ID);
         createdComment.setId(3L);
         createdComment.setCampaignId(123L);
         createdComment.setDate(DATE);
@@ -73,19 +74,19 @@ class CommentControllerTest {
         Comment body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getId()).isEqualTo(3L);
-        assertThat(body.getOwner()).isEqualTo("223");
+        assertThat(body.getUserId()).isEqualTo(USER_ID);
         assertThat(body.getText()).isEqualTo("This is the comment.");
         assertThat(body.getCampaignId()).isEqualTo(123L);
 
         verify(commentService).createComment(commentArgumentCaptor.capture());
         Comment captorValue = commentArgumentCaptor.getValue();
         assertThat(captorValue.getId()).isNull();
-        assertThat(captorValue.getOwner()).isEqualTo("223");
+        assertThat(captorValue.getUserId()).isEqualTo(USER_ID);
     }
 
     @Test
     void shouldRemoveCommentForOwner() throws DataException {
-        when(commentService.isOwner(123L, "223")).thenReturn(true);
+        when(commentService.isOwner(123L, USER_ID)).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(user);
         ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -93,7 +94,7 @@ class CommentControllerTest {
 
     @Test
     void shouldBe403WhenCommentIsNotOwnedByUser() throws DataException {
-        when(commentService.isOwner(123L, "223")).thenReturn(false);
+        when(commentService.isOwner(123L, USER_ID)).thenReturn(false);
         when(userService.getCurrentUser()).thenReturn(user);
         ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -102,7 +103,7 @@ class CommentControllerTest {
     @Test
     void shouldBe404WhenCommentIdDoesNotExist() throws DataException {
         when(userService.getCurrentUser()).thenReturn(user);
-        when(commentService.isOwner(123L, "223")).thenThrow(DataException.class);
+        when(commentService.isOwner(123L, USER_ID)).thenThrow(DataException.class);
         ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

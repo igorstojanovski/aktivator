@@ -1,6 +1,8 @@
 package io.aktivator.campaign;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.aktivator.configuration.UserIdSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +24,8 @@ public class Campaign {
     private Long id;
     private String title;
     private String description;
-    private String owner;
+    @JsonSerialize(converter = UserIdSerializer.class)
+    private Long ownerId;
     @Temporal(TemporalType.DATE)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;

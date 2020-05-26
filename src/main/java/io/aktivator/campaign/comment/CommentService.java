@@ -20,9 +20,9 @@ class CommentService {
         return commentRepository.save(comment);
     }
 
-    boolean isOwner(Long commentId, String userId) throws DataException {
+    boolean isOwner(Long commentId, Long userId) throws DataException {
         Comment comment = getComment(commentId);
-        return comment.getOwner().equals(userId);
+        return comment.getUserId().equals(userId);
     }
 
     Comment hide(Long commentId) throws DataException {

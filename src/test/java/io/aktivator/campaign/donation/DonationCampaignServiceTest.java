@@ -45,7 +45,7 @@ class DonationCampaignServiceTest {
         entity.setCreated(created);
         entity.setStartDate(startDate);
         entity.setEndDate(endDate);
-        entity.setOwner("23456099");
+        entity.setOwnerId(1L);
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
 
@@ -65,7 +65,7 @@ class DonationCampaignServiceTest {
 
     @Test
     void shouldGoToRepoToSave() {
-        service.save(createRequest, "23456099");
+        service.save(createRequest, 1L);
         verify(repository).save(entityArgumentCaptor.capture());
 
         DonationCampaign value = entityArgumentCaptor.getValue();
