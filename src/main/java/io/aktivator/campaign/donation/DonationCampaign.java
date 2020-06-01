@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-class DonationCampaign extends Campaign {
+public class DonationCampaign extends Campaign {
     @NotNull
     private Long target;
 }
