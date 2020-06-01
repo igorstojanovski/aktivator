@@ -11,9 +11,9 @@ public class LikeService {
     @Autowired
     private LikeRepository likeRepository;
     @Autowired
-    private UserService userService;
-    @Autowired
     private DonationCampaignService donationCampaignService;
+    @Autowired
+    private UserService userService;
 
     public Like createLike(Long campaignId) {
         Like like = new Like();
