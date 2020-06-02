@@ -20,7 +20,6 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +31,7 @@ class DonationCampaignControllerTest {
     @Mock
     private DonationCampaignService donationCampaignService;
     private DonationCampaignController controller;
-    private DonationCampaign entity;
+    private DonationCampaignDto entity;
 
     @BeforeEach
     void setupTest() {
@@ -41,7 +40,7 @@ class DonationCampaignControllerTest {
         Date startDate = new Date();
         @NotNull Date endDate = convertLocalDateToDate(LocalDate.now().plusDays(30));
 
-        entity = new DonationCampaign();
+        entity = new DonationCampaignDto();
         entity.setTarget(2000L);
         entity.setCreated(created);
         entity.setStartDate(startDate);
@@ -54,7 +53,7 @@ class DonationCampaignControllerTest {
     @Test
     void shouldGoToServiceToGetCampaign() throws DataException {
         when(donationCampaignService.getCampaign(123L)).thenReturn(entity);
-        ResponseEntity<DonationCampaign> response = controller.getCampaign(123L);
+        ResponseEntity<DonationCampaignDto> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(entity);
     }
@@ -62,7 +61,7 @@ class DonationCampaignControllerTest {
     @Test
     void shouldReturnStatus404WhenTheCampaignDoesNotAlreadyExist() throws DataException {
         when(donationCampaignService.getCampaign(123L)).thenThrow(new DataException(""));
-        ResponseEntity<DonationCampaign> response = controller.getCampaign(123L);
+        ResponseEntity<DonationCampaignDto> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -72,12 +71,13 @@ class DonationCampaignControllerTest {
         user.setId(OWNER_ID);
         when(userService.getCurrentUser()).thenReturn(user);
         DonationCampaignDto request = new DonationCampaignDto();
-        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(entity);
+        DonationCampaign donationCampaign = new DonationCampaign();
+        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(donationCampaign);
 
         ResponseEntity<DonationCampaign> response = controller.createDonationCampaign(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(entity);
+        assertThat(response.getBody()).isEqualTo(donationCampaign);
     }
 
     @Test
@@ -97,12 +97,13 @@ class DonationCampaignControllerTest {
         when(userService.getCurrentUser()).thenReturn(user);
         DonationCampaignDto request = new DonationCampaignDto();
         request.setId(1L);
-        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(entity);
+        DonationCampaign donationCampaign = new DonationCampaign();
+        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(donationCampaign);
 
         ResponseEntity<DonationCampaign> response = controller.updateDonationCampaign(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(entity);
+        assertThat(response.getBody()).isEqualTo(donationCampaign);
     }
 
     @Test

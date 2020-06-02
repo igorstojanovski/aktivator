@@ -4,5 +4,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface DonationCampaignRepository extends PagingAndSortingRepository<DonationCampaign, Long> {
+public interface DonationCampaignRepository extends PagingAndSortingRepository<DonationCampaign, Long> {
 }

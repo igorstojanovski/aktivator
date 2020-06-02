@@ -12,10 +12,12 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Like {
+public class CampaignLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private User user;
+    @OneToOne
+    private User owner;
+    @OneToOne
     private Campaign campaign;
 }

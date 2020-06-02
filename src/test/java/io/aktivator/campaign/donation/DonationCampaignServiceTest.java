@@ -1,5 +1,6 @@
 package io.aktivator.campaign.donation;
 
+import io.aktivator.campaign.like.LikeService;
 import io.aktivator.exceptions.DataException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +28,10 @@ import static org.mockito.Mockito.when;
 class DonationCampaignServiceTest {
 
     @Mock
+    private LikeService likeService;
+    @Mock
     private DonationCampaignRepository repository;
+    @InjectMocks
     private DonationCampaignService service;
     private DonationCampaign entity;
     private DonationCampaignDto createRequest;
@@ -35,7 +40,6 @@ class DonationCampaignServiceTest {
 
     @BeforeEach
     void setupTest() {
-        service = new DonationCampaignService(repository);
         Date created = new Date();
         Date startDate = new Date();
         Date endDate = convertLocalDateToDate(LocalDate.now().plusDays(30));
@@ -75,9 +79,9 @@ class DonationCampaignServiceTest {
     @Test
     void shouldGoToRepoToGetById() throws DataException {
         when(repository.findById(123L)).thenReturn(Optional.of(entity));
-        DonationCampaign found = service.getCampaign(123L);
+        DonationCampaignDto found = service.getCampaign(123L);
 
-        assertThat(found).isEqualTo(entity);
+        assertThat(found.getDescription()).isEqualTo("Quo vadis?!");
     }
 
     @Test

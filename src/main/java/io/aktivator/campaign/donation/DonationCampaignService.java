@@ -1,5 +1,6 @@
 package io.aktivator.campaign.donation;
 
+import io.aktivator.campaign.like.LikeService;
 import io.aktivator.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,21 +8,34 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-class DonationCampaignService {
+public class DonationCampaignService {
+    @Autowired
+    private LikeService likeService;
+    @Autowired
     private DonationCampaignRepository repository;
 
-    @Autowired
-    DonationCampaignService(DonationCampaignRepository repository) {
-        this.repository = repository;
-    }
-
-    DonationCampaign getCampaign(Long campaignId) throws DataException {
-        return repository.findById(campaignId)
+    public DonationCampaignDto getCampaign(Long campaignId) throws DataException {
+        DonationCampaign donationCampaign = repository.findById(campaignId)
                 .orElseThrow(() -> new DataException("No such campaign found."));
+        return donationCampaignToDto(donationCampaign);
     }
 
     DonationCampaign save(DonationCampaignDto donationCampaignEntity, Long ownerId) {
         return repository.save(creationRequestToEntity(donationCampaignEntity, ownerId));
+    }
+
+    private DonationCampaignDto donationCampaignToDto(DonationCampaign donationCampaign) {
+        DonationCampaignDto campaignDto = new DonationCampaignDto();
+        campaignDto.setId(donationCampaign.getId());
+        campaignDto.setCreated(donationCampaign.getCreated());
+        campaignDto.setDescription(donationCampaign.getDescription());
+        campaignDto.setEndDate(donationCampaign.getEndDate());
+        campaignDto.setFeatured(donationCampaign.isFeatured());
+        campaignDto.setOwnerId(donationCampaign.getOwnerId());
+        campaignDto.setTitle(donationCampaign.getTitle());
+        campaignDto.setLiked(likeService.isCampaignLiked(donationCampaign.getId()));
+
+        return campaignDto;
     }
 
     private DonationCampaign creationRequestToEntity(DonationCampaignDto request, Long ownerId) {

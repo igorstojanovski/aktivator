@@ -9,11 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LikeControllerTest {
+class CampaignLikeControllerTest {
 
     public static final long CAMPAIGN_ID = 1L;
     public static final long LIKE_ID = 2L;
@@ -24,11 +23,11 @@ class LikeControllerTest {
 
     @Test
     void shouldCallServiceToCreateLike() {
-        Like like = new Like();
-        like.setId(LIKE_ID);
+        CampaignLike campaignLike = new CampaignLike();
+        campaignLike.setId(LIKE_ID);
 
-        when(likeService.createLike(CAMPAIGN_ID)).thenReturn(like);
-        ResponseEntity<Like> response = likeController.createLike(CAMPAIGN_ID);
+        when(likeService.createLike(CAMPAIGN_ID)).thenReturn(campaignLike);
+        ResponseEntity<CampaignLike> response = likeController.createLike(CAMPAIGN_ID);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getId()).isEqualTo(LIKE_ID);

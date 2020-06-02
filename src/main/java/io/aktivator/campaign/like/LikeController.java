@@ -16,10 +16,8 @@ public class LikeController {
     private LikeService likeService;
 
     @PostMapping
-    ResponseEntity<Like> createLike(@PathVariable Long campaignId) {
-        Like like = likeService.createLike(campaignId);
-        return new ResponseEntity<>(like, HttpStatus.OK);
+    ResponseEntity<CampaignLike> createLike(@PathVariable Long campaignId) {
+        CampaignLike campaignLike = likeService.createLike(campaignId);
+        return new ResponseEntity<>(campaignLike, HttpStatus.OK);
     }
-
-
 }
