@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CampaignLikeControllerTest {
+class LikeControllerTest {
 
     public static final long CAMPAIGN_ID = 1L;
     public static final long LIKE_ID = 2L;
@@ -23,11 +23,11 @@ class CampaignLikeControllerTest {
 
     @Test
     void shouldCallServiceToCreateLike() {
-        CampaignLike campaignLike = new CampaignLike();
-        campaignLike.setId(LIKE_ID);
+        Like like = new Like();
+        like.setId(LIKE_ID);
 
-        when(likeService.createLike(CAMPAIGN_ID)).thenReturn(campaignLike);
-        ResponseEntity<CampaignLike> response = likeController.createLike(CAMPAIGN_ID);
+        when(likeService.createLike(CAMPAIGN_ID)).thenReturn(like);
+        ResponseEntity<Like> response = likeController.createLike(CAMPAIGN_ID);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getId()).isEqualTo(LIKE_ID);

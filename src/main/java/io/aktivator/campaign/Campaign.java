@@ -2,7 +2,7 @@ package io.aktivator.campaign;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.aktivator.campaign.like.CampaignLike;
+import io.aktivator.campaign.like.Like;
 import io.aktivator.configuration.UserIdSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,5 +41,5 @@ public class Campaign {
     private Date created = new Date();
     private boolean featured;
     @OneToMany
-    private List<CampaignLike> likes;
+    private List<Like> likes;
 }

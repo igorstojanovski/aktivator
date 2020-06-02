@@ -1,6 +1,6 @@
 package io.aktivator.campaign.donation;
 
-import io.aktivator.campaign.like.CampaignLike;
+import io.aktivator.campaign.like.Like;
 import io.aktivator.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,8 +38,8 @@ public class DonationCampaignService {
         return campaignDto;
     }
 
-    private boolean isCampaignLiked(List<CampaignLike> likes, Long ownerId) {
-        for(CampaignLike like : likes) {
+    private boolean isCampaignLiked(List<Like> likes, Long ownerId) {
+        for(Like like : likes) {
             if(like.getOwner().getId().equals(ownerId)) {
                 return true;
             }

@@ -16,13 +16,13 @@ public class LikeService {
     @Autowired
     private UserService userService;
 
-    public CampaignLike createLike(Long campaignId) {
-        CampaignLike campaignLike = new CampaignLike();
-        campaignLike.setOwner(userService.getCurrentUser());
-        CampaignLike savedLike = likeRepository.save(campaignLike);
+    public Like createLike(Long campaignId) {
+        Like like = new Like();
+        like.setOwner(userService.getCurrentUser());
+        Like savedLike = likeRepository.save(like);
         DonationCampaign donationCampaign = donationCampaignRepository.findById(campaignId).get();
         donationCampaign.getLikes().add(savedLike);
         donationCampaignRepository.save(donationCampaign);
-        return likeRepository.save(campaignLike);
+        return likeRepository.save(like);
     }
 }

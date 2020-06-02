@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CampaignLikeServiceTest {
+class LikeServiceTest {
 
     public static final long CURRENT_USER_ID = 3L;
     public static final long CREATED_LIKE_ID = 2L;
@@ -34,7 +34,7 @@ class CampaignLikeServiceTest {
     @InjectMocks
     private LikeService likeService;
     @Captor
-    private ArgumentCaptor<CampaignLike> likeArgumentCaptor = ArgumentCaptor.forClass(CampaignLike.class);
+    private ArgumentCaptor<Like> likeArgumentCaptor = ArgumentCaptor.forClass(Like.class);
 
     @Test
     @Disabled
@@ -43,19 +43,19 @@ class CampaignLikeServiceTest {
         user.setId(CURRENT_USER_ID);
         user.setExternalId(EXTERNAL_ID);
 
-        CampaignLike campaignLike = new CampaignLike();
-        campaignLike.setOwner(user);
-        CampaignLike createdCampaignLike = new CampaignLike();
-        createdCampaignLike.setId(CREATED_LIKE_ID);
+        Like like = new Like();
+        like.setOwner(user);
+        Like createdLike = new Like();
+        createdLike.setId(CREATED_LIKE_ID);
 
         DonationCampaignDto campaign = new DonationCampaignDto();
         campaign.setId(CAMPAIGN_ID);
 
-        when(likeRepository.save(any(CampaignLike.class))).thenReturn(createdCampaignLike);
+        when(likeRepository.save(any(Like.class))).thenReturn(createdLike);
         when(donationCampaignService.getCampaign(CAMPAIGN_ID)).thenReturn(campaign);
         when(userService.getCurrentUser()).thenReturn(user);
 
-        CampaignLike response = likeService.createLike(CAMPAIGN_ID);
+        Like response = likeService.createLike(CAMPAIGN_ID);
         assertThat(response.getId()).isEqualTo(CREATED_LIKE_ID);
         verify(likeRepository).save(likeArgumentCaptor.capture());
         assertThat(likeArgumentCaptor.getValue().getOwner().getExternalId().equals(EXTERNAL_ID));
