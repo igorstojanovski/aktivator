@@ -1,6 +1,5 @@
 package io.aktivator.campaign.donation;
 
-import io.aktivator.campaign.like.LikeService;
 import io.aktivator.exceptions.DataException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +26,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DonationCampaignServiceTest {
 
-    @Mock
-    private LikeService likeService;
     @Mock
     private DonationCampaignRepository repository;
     @InjectMocks

@@ -1,16 +1,16 @@
 package io.aktivator.campaign.donation;
 
-import io.aktivator.campaign.like.LikeService;
+import io.aktivator.campaign.like.CampaignLike;
 import io.aktivator.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DonationCampaignService {
-    @Autowired
-    private LikeService likeService;
     @Autowired
     private DonationCampaignRepository repository;
 
@@ -33,9 +33,18 @@ public class DonationCampaignService {
         campaignDto.setFeatured(donationCampaign.isFeatured());
         campaignDto.setOwnerId(donationCampaign.getOwnerId());
         campaignDto.setTitle(donationCampaign.getTitle());
-        campaignDto.setLiked(likeService.isCampaignLiked(donationCampaign.getId()));
+        campaignDto.setLiked(isCampaignLiked(donationCampaign.getLikes(), donationCampaign.getOwnerId()));
 
         return campaignDto;
+    }
+
+    private boolean isCampaignLiked(List<CampaignLike> likes, Long ownerId) {
+        for(CampaignLike like : likes) {
+            if(like.getOwner().getId().equals(ownerId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private DonationCampaign creationRequestToEntity(DonationCampaignDto request, Long ownerId) {

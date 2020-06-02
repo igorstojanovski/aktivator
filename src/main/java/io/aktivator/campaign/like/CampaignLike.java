@@ -1,6 +1,5 @@
 package io.aktivator.campaign.like;
 
-import io.aktivator.campaign.Campaign;
 import io.aktivator.user.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +17,4 @@ public class CampaignLike {
     private Long id;
     @OneToOne
     private User owner;
-    @OneToOne
-    private Campaign campaign;
 }
