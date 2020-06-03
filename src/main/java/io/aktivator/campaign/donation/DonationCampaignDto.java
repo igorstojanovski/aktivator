@@ -29,4 +29,5 @@ public class DonationCampaignDto {
     private Long target;
     private boolean featured;
     private boolean liked;
+    private int likesCount;
 }

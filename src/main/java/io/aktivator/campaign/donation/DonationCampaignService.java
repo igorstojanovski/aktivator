@@ -34,6 +34,7 @@ public class DonationCampaignService {
         campaignDto.setOwnerId(donationCampaign.getOwnerId());
         campaignDto.setTitle(donationCampaign.getTitle());
         campaignDto.setLiked(isCampaignLiked(donationCampaign.getLikes(), donationCampaign.getOwnerId()));
+        campaignDto.setLikesCount(donationCampaign.getLikes().size());
 
         return campaignDto;
     }
