@@ -2,11 +2,14 @@ package io.aktivator.campaign.like;
 
 import io.aktivator.campaign.donation.DonationCampaign;
 import io.aktivator.campaign.donation.DonationCampaignRepository;
+import io.aktivator.exceptions.DataException;
 import io.aktivator.exceptions.ResourceAlreadyExists;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class LikeService {
@@ -31,5 +34,19 @@ public class LikeService {
         donationCampaign.getLikes().add(savedLike);
         donationCampaignRepository.save(donationCampaign);
         return likeRepository.save(like);
+    }
+
+    public List<Like> getLikes(Long campaignId) {
+        DonationCampaign donationCampaign = donationCampaignRepository
+                .findById(campaignId).orElseThrow(() -> new DataException("Campaign does not exist."));
+
+        return donationCampaign.getLikes();
+    }
+
+    public void removeLike(Long campaignId) {
+        User currentUser = userService.getCurrentUser();
+        DonationCampaign donationCampaign = donationCampaignRepository.findById(campaignId).get();
+        donationCampaign.getLikes().removeIf(l -> l.getOwner().getId().equals(currentUser.getId()));
+        donationCampaignRepository.save(donationCampaign);
     }
 }
