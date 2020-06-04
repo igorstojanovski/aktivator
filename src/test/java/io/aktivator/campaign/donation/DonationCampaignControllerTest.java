@@ -114,7 +114,7 @@ class DonationCampaignControllerTest {
     }
 
     @Test
-    void shouldGoTosServiceToGetPagedResults() {
+    void shouldGoToServiceToGetPagedResults() {
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
         controller.getAllCampaigns(pageable);
 

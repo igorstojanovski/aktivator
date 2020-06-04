@@ -1,6 +1,8 @@
 package io.aktivator.campaign.donation;
 
+import io.aktivator.campaign.like.Like;
 import io.aktivator.exceptions.DataException;
+import io.aktivator.user.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,9 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +30,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DonationCampaignServiceTest {
 
+    public static final long OWNER_ID = 1L;
+    public static final long CAMPAIGN_ID = 123L;
     @Mock
     private DonationCampaignRepository repository;
     @InjectMocks
@@ -46,7 +52,7 @@ class DonationCampaignServiceTest {
         entity.setCreated(created);
         entity.setStartDate(startDate);
         entity.setEndDate(endDate);
-        entity.setOwnerId(1L);
+        entity.setOwnerId(OWNER_ID);
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
 
@@ -75,16 +81,36 @@ class DonationCampaignServiceTest {
 
     @Test
     void shouldGoToRepoToGetById() throws DataException {
-        when(repository.findById(123L)).thenReturn(Optional.of(entity));
-        DonationCampaignDto found = service.getCampaign(123L);
+        when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.of(entity));
+        DonationCampaignDto found = service.getCampaign(CAMPAIGN_ID);
 
         assertThat(found.getDescription()).isEqualTo("Quo vadis?!");
     }
 
     @Test
+    void shouldAddLikesInfoToDto() throws DataException {
+        User user = new User();
+        user.setExternalId("simple");
+        user.setId(OWNER_ID);
+
+        Like like = new Like();
+        like.setId(1L);
+        like.setOwner(user);
+
+        List<Like> likes = Collections.singletonList(like);
+        entity.setLikes(likes);
+
+        when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.of(entity));
+        DonationCampaignDto found = service.getCampaign(CAMPAIGN_ID);
+
+        assertThat(found.isLiked()).isTrue();
+        assertThat(found.getLikesCount()).isEqualTo(1);
+    }
+
+    @Test
     void shouldThrowWhenCampaignDoesNotExist() {
-        when(repository.findById(123L)).thenReturn(Optional.empty());
-        Assertions.assertThrows(DataException.class, () -> service.getCampaign(123L));
+        when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.empty());
+        Assertions.assertThrows(DataException.class, () -> service.getCampaign(CAMPAIGN_ID));
     }
 
     @Test
