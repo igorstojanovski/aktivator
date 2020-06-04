@@ -3,6 +3,7 @@ package io.aktivator.campaign.donation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.aktivator.campaign.CampaignStatus;
 import io.aktivator.configuration.UserIdSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,5 @@ public class DonationCampaignDto {
     private boolean featured;
     private boolean liked;
     private int likesCount;
+    private CampaignStatus campaignStatus;
 }

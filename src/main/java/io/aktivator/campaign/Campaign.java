@@ -42,4 +42,6 @@ public class Campaign {
     private boolean featured;
     @OneToMany
     private List<Like> likes;
+    @Enumerated(EnumType.STRING)
+    private CampaignStatus campaignStatus;
 }

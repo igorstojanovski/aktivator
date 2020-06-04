@@ -1,5 +1,6 @@
 package io.aktivator.campaign.donation;
 
+import io.aktivator.campaign.CampaignStatus;
 import io.aktivator.campaign.like.Like;
 import io.aktivator.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,16 @@ import java.util.List;
 @Service
 public class DonationCampaignService {
     @Autowired
-    private DonationCampaignRepository repository;
+    private DonationCampaignRepository donationCampaignRepository;
 
     public DonationCampaignDto getCampaign(Long campaignId) throws DataException {
-        DonationCampaign donationCampaign = repository.findById(campaignId)
+        DonationCampaign donationCampaign = donationCampaignRepository.findById(campaignId)
                 .orElseThrow(() -> new DataException("No such campaign found."));
         return donationCampaignToDto(donationCampaign);
     }
 
     DonationCampaign save(DonationCampaignDto donationCampaignEntity, Long ownerId) {
-        return repository.save(creationRequestToEntity(donationCampaignEntity, ownerId));
+        return donationCampaignRepository.save(creationRequestToEntity(donationCampaignEntity, ownerId));
     }
 
     private DonationCampaignDto donationCampaignToDto(DonationCampaign donationCampaign) {
@@ -35,6 +36,7 @@ public class DonationCampaignService {
         campaignDto.setTitle(donationCampaign.getTitle());
         campaignDto.setLiked(isCampaignLiked(donationCampaign.getLikes(), donationCampaign.getOwnerId()));
         campaignDto.setLikesCount(donationCampaign.getLikes().size());
+        campaignDto.setCampaignStatus(donationCampaign.getCampaignStatus());
 
         return campaignDto;
     }
@@ -57,10 +59,11 @@ public class DonationCampaignService {
         entity.setStartDate(request.getStartDate());
         entity.setEndDate(request.getEndDate());
         entity.setOwnerId(ownerId);
+        entity.setCampaignStatus(CampaignStatus.NEW);
         return entity;
     }
 
     Page<DonationCampaign> getAllCampaigns(Pageable pageable) {
-        return repository.findAll(pageable);
+        return donationCampaignRepository.findAll(pageable);
     }
 }
