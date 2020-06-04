@@ -1,7 +1,7 @@
 package io.aktivator.campaign.like;
 
-import io.aktivator.campaign.donation.DonationCampaignDto;
-import io.aktivator.campaign.donation.DonationCampaignService;
+import io.aktivator.campaign.donation.DonationDto;
+import io.aktivator.campaign.donation.DonationService;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.junit.jupiter.api.Disabled;
@@ -30,7 +30,7 @@ class LikeServiceTest {
     @Mock
     private UserService userService;
     @Mock
-    private DonationCampaignService donationCampaignService;
+    private DonationService donationService;
     @InjectMocks
     private LikeService likeService;
     @Captor
@@ -48,11 +48,11 @@ class LikeServiceTest {
         Like createdLike = new Like();
         createdLike.setId(CREATED_LIKE_ID);
 
-        DonationCampaignDto campaign = new DonationCampaignDto();
+        DonationDto campaign = new DonationDto();
         campaign.setId(CAMPAIGN_ID);
 
         when(likeRepository.save(any(Like.class))).thenReturn(createdLike);
-        when(donationCampaignService.getCampaign(CAMPAIGN_ID)).thenReturn(campaign);
+        when(donationService.getCampaign(CAMPAIGN_ID)).thenReturn(campaign);
         when(userService.getCurrentUser()).thenReturn(user);
 
         Like response = likeService.createLike(CAMPAIGN_ID);

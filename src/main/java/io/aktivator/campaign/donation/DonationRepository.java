@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface DonationCampaignRepository extends PagingAndSortingRepository<DonationCampaign, Long> {
-    Optional<DonationCampaign> findByIdAndLikes_Owner_Id(Long id, Long ownerId);
+public interface DonationRepository extends PagingAndSortingRepository<Donation, Long> {
+    Optional<Donation> findByIdAndLikes_Owner_Id(Long id, Long ownerId);
 }

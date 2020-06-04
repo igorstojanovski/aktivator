@@ -2,7 +2,7 @@ package io.aktivator.campaign.donation;
 
 import org.junit.jupiter.api.Test;
 
-class DonationCampaignTest {
+class DonationTest {
 
     @Test
     public void shouldSetCampaignValues() {

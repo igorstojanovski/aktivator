@@ -14,53 +14,53 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/campaign/donation")
-public class DonationCampaignController {
+public class DonationController {
 
     private UserService userService;
-    private DonationCampaignService donationCampaignService;
+    private DonationService donationService;
 
     @Autowired
-    DonationCampaignController(UserService userService, DonationCampaignService donationCampaignService) {
+    DonationController(UserService userService, DonationService donationService) {
         this.userService = userService;
-        this.donationCampaignService = donationCampaignService;
+        this.donationService = donationService;
     }
 
     @PostMapping
-    public ResponseEntity<DonationCampaign> createDonationCampaign(@RequestBody DonationCampaignDto createRequest) {
+    public ResponseEntity<Donation> createDonationCampaign(@RequestBody DonationDto createRequest) {
         return createRequest.getId() == null
                 ? saveCampaign(createRequest)
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<DonationCampaign> saveCampaign(@RequestBody DonationCampaignDto createRequest) {
-        ResponseEntity<DonationCampaign> donationCampaignResponseEntity;
+    private ResponseEntity<Donation> saveCampaign(@RequestBody DonationDto createRequest) {
+        ResponseEntity<Donation> donationCampaignResponseEntity;
         User currentUser = userService.getCurrentUser();
-        DonationCampaign saved = donationCampaignService.save(createRequest, currentUser.getId());
+        Donation saved = donationService.save(createRequest, currentUser.getId());
         donationCampaignResponseEntity = new ResponseEntity<>(saved, HttpStatus.OK);
         return donationCampaignResponseEntity;
     }
 
     @PutMapping
-    public ResponseEntity<DonationCampaign> updateDonationCampaign(@RequestBody DonationCampaignDto update) {
+    public ResponseEntity<Donation> updateDonationCampaign(@RequestBody DonationDto update) {
         return update.getId() == null
                 ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
                 : saveCampaign(update);
     }
 
     @GetMapping("/{campaignId}")
-    public ResponseEntity<DonationCampaignDto> getCampaign(@PathVariable Long campaignId) {
+    public ResponseEntity<DonationDto> getCampaign(@PathVariable Long campaignId) {
         try {
-            return new ResponseEntity<>(donationCampaignService.getCampaign(campaignId), HttpStatus.OK);
+            return new ResponseEntity<>(donationService.getCampaign(campaignId), HttpStatus.OK);
         } catch (DataException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping
-    public Page<DonationCampaign> getAllCampaigns(
+    public Page<Donation> getAllCampaigns(
         @SortDefault.SortDefaults({
             @SortDefault(sort = "id", direction = Sort.Direction.DESC)
         }) Pageable pageable) {
-        return donationCampaignService.getAllCampaigns(pageable);
+        return donationService.getAllCampaigns(pageable);
     }
 }

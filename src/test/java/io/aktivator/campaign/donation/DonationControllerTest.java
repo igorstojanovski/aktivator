@@ -24,23 +24,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DonationCampaignControllerTest {
+class DonationControllerTest {
     public static final Long OWNER_ID = 1L;
     @Mock
     private UserService userService;
     @Mock
-    private DonationCampaignService donationCampaignService;
-    private DonationCampaignController controller;
-    private DonationCampaignDto entity;
+    private DonationService donationService;
+    private DonationController controller;
+    private DonationDto entity;
 
     @BeforeEach
     void setupTest() {
-        controller = new DonationCampaignController(userService, donationCampaignService);
+        controller = new DonationController(userService, donationService);
         Date created = new Date();
         Date startDate = new Date();
         @NotNull Date endDate = convertLocalDateToDate(LocalDate.now().plusDays(30));
 
-        entity = new DonationCampaignDto();
+        entity = new DonationDto();
         entity.setTarget(2000L);
         entity.setCreated(created);
         entity.setStartDate(startDate);
@@ -52,16 +52,16 @@ class DonationCampaignControllerTest {
 
     @Test
     void shouldGoToServiceToGetCampaign() throws DataException {
-        when(donationCampaignService.getCampaign(123L)).thenReturn(entity);
-        ResponseEntity<DonationCampaignDto> response = controller.getCampaign(123L);
+        when(donationService.getCampaign(123L)).thenReturn(entity);
+        ResponseEntity<DonationDto> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(entity);
     }
 
     @Test
     void shouldReturnStatus404WhenTheCampaignDoesNotAlreadyExist() throws DataException {
-        when(donationCampaignService.getCampaign(123L)).thenThrow(new DataException(""));
-        ResponseEntity<DonationCampaignDto> response = controller.getCampaign(123L);
+        when(donationService.getCampaign(123L)).thenThrow(new DataException(""));
+        ResponseEntity<DonationDto> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -70,22 +70,22 @@ class DonationCampaignControllerTest {
         User user = new User();
         user.setId(OWNER_ID);
         when(userService.getCurrentUser()).thenReturn(user);
-        DonationCampaignDto request = new DonationCampaignDto();
-        DonationCampaign donationCampaign = new DonationCampaign();
-        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(donationCampaign);
+        DonationDto request = new DonationDto();
+        Donation donation = new Donation();
+        when(donationService.save(request, OWNER_ID)).thenReturn(donation);
 
-        ResponseEntity<DonationCampaign> response = controller.createDonationCampaign(request);
+        ResponseEntity<Donation> response = controller.createDonationCampaign(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(donationCampaign);
+        assertThat(response.getBody()).isEqualTo(donation);
     }
 
     @Test
     void shouldReturnErrorOnCreateWhenIdIsProvided() {
-        DonationCampaignDto request = new DonationCampaignDto();
+        DonationDto request = new DonationDto();
         request.setId(1L);
 
-        ResponseEntity<DonationCampaign> response = controller.createDonationCampaign(request);
+        ResponseEntity<Donation> response = controller.createDonationCampaign(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -95,21 +95,21 @@ class DonationCampaignControllerTest {
         User user = new User();
         user.setId(OWNER_ID);
         when(userService.getCurrentUser()).thenReturn(user);
-        DonationCampaignDto request = new DonationCampaignDto();
+        DonationDto request = new DonationDto();
         request.setId(1L);
-        DonationCampaign donationCampaign = new DonationCampaign();
-        when(donationCampaignService.save(request, OWNER_ID)).thenReturn(donationCampaign);
+        Donation donation = new Donation();
+        when(donationService.save(request, OWNER_ID)).thenReturn(donation);
 
-        ResponseEntity<DonationCampaign> response = controller.updateDonationCampaign(request);
+        ResponseEntity<Donation> response = controller.updateDonationCampaign(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(donationCampaign);
+        assertThat(response.getBody()).isEqualTo(donation);
     }
 
     @Test
     void shouldReturn404WhenCampaignDoesNotHaveId() {
-        DonationCampaignDto request = new DonationCampaignDto();
-        ResponseEntity<DonationCampaign> response = controller.updateDonationCampaign(request);
+        DonationDto request = new DonationDto();
+        ResponseEntity<Donation> response = controller.updateDonationCampaign(request);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -118,7 +118,7 @@ class DonationCampaignControllerTest {
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
         controller.getAllCampaigns(pageable);
 
-        verify(donationCampaignService).getAllCampaigns(pageable);
+        verify(donationService).getAllCampaigns(pageable);
     }
 
     private Date convertLocalDateToDate(LocalDate myLocalDate) {

@@ -28,18 +28,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DonationCampaignServiceTest {
+class DonationServiceTest {
 
     public static final long OWNER_ID = 1L;
     public static final long CAMPAIGN_ID = 123L;
     @Mock
-    private DonationCampaignRepository repository;
+    private DonationRepository repository;
     @InjectMocks
-    private DonationCampaignService service;
-    private DonationCampaign entity;
-    private DonationCampaignDto createRequest;
+    private DonationService service;
+    private Donation entity;
+    private DonationDto createRequest;
     @Captor
-    private ArgumentCaptor<DonationCampaign> entityArgumentCaptor = ArgumentCaptor.forClass(DonationCampaign.class);
+    private ArgumentCaptor<Donation> entityArgumentCaptor = ArgumentCaptor.forClass(Donation.class);
 
     @BeforeEach
     void setupTest() {
@@ -47,7 +47,7 @@ class DonationCampaignServiceTest {
         Date startDate = new Date();
         Date endDate = convertLocalDateToDate(LocalDate.now().plusDays(30));
 
-        entity = new DonationCampaign();
+        entity = new Donation();
         entity.setTarget(2000L);
         entity.setCreated(created);
         entity.setStartDate(startDate);
@@ -56,7 +56,7 @@ class DonationCampaignServiceTest {
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
 
-        createRequest = new DonationCampaignDto();
+        createRequest = new DonationDto();
         createRequest.setTarget(2000L);
         createRequest.setCreated(created);
         createRequest.setStartDate(startDate);
@@ -75,14 +75,14 @@ class DonationCampaignServiceTest {
         service.save(createRequest, 1L);
         verify(repository).save(entityArgumentCaptor.capture());
 
-        DonationCampaign value = entityArgumentCaptor.getValue();
+        Donation value = entityArgumentCaptor.getValue();
         assertThat(value.getTarget()).isEqualTo(2000L);
     }
 
     @Test
     void shouldGoToRepoToGetById() throws DataException {
         when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.of(entity));
-        DonationCampaignDto found = service.getCampaign(CAMPAIGN_ID);
+        DonationDto found = service.getCampaign(CAMPAIGN_ID);
 
         assertThat(found.getDescription()).isEqualTo("Quo vadis?!");
     }
@@ -101,7 +101,7 @@ class DonationCampaignServiceTest {
         entity.setLikes(likes);
 
         when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.of(entity));
-        DonationCampaignDto found = service.getCampaign(CAMPAIGN_ID);
+        DonationDto found = service.getCampaign(CAMPAIGN_ID);
 
         assertThat(found.isLiked()).isTrue();
         assertThat(found.getLikesCount()).isEqualTo(1);

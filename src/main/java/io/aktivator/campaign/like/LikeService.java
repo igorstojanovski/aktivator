@@ -1,7 +1,7 @@
 package io.aktivator.campaign.like;
 
-import io.aktivator.campaign.donation.DonationCampaign;
-import io.aktivator.campaign.donation.DonationCampaignRepository;
+import io.aktivator.campaign.donation.Donation;
+import io.aktivator.campaign.donation.DonationRepository;
 import io.aktivator.exceptions.DataException;
 import io.aktivator.exceptions.ResourceAlreadyExists;
 import io.aktivator.user.model.User;
@@ -17,36 +17,36 @@ public class LikeService {
     @Autowired
     private LikeRepository likeRepository;
     @Autowired
-    private DonationCampaignRepository donationCampaignRepository;
+    private DonationRepository donationRepository;
     @Autowired
     private UserService userService;
 
     public Like createLike(Long campaignId) {
         User currentUser = userService.getCurrentUser();
-        if(donationCampaignRepository.findByIdAndLikes_Owner_Id(campaignId, currentUser.getId()).isPresent()) {
+        if(donationRepository.findByIdAndLikes_Owner_Id(campaignId, currentUser.getId()).isPresent()) {
             throw new ResourceAlreadyExists("Like already exists for this user and this campaign.");
         }
 
         Like like = new Like();
         like.setOwner(currentUser);
         Like savedLike = likeRepository.save(like);
-        DonationCampaign donationCampaign = donationCampaignRepository.findById(campaignId).get();
-        donationCampaign.getLikes().add(savedLike);
-        donationCampaignRepository.save(donationCampaign);
+        Donation donation = donationRepository.findById(campaignId).get();
+        donation.getLikes().add(savedLike);
+        donationRepository.save(donation);
         return likeRepository.save(like);
     }
 
     public List<Like> getLikes(Long campaignId) {
-        DonationCampaign donationCampaign = donationCampaignRepository
+        Donation donation = donationRepository
                 .findById(campaignId).orElseThrow(() -> new DataException("Campaign does not exist."));
 
-        return donationCampaign.getLikes();
+        return donation.getLikes();
     }
 
     public void removeLike(Long campaignId) {
         User currentUser = userService.getCurrentUser();
-        DonationCampaign donationCampaign = donationCampaignRepository.findById(campaignId).get();
-        donationCampaign.getLikes().removeIf(l -> l.getOwner().getId().equals(currentUser.getId()));
-        donationCampaignRepository.save(donationCampaign);
+        Donation donation = donationRepository.findById(campaignId).get();
+        donation.getLikes().removeIf(l -> l.getOwner().getId().equals(currentUser.getId()));
+        donationRepository.save(donation);
     }
 }

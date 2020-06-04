@@ -15,7 +15,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DonationCampaignDto {
+public class DonationDto {
     private Long id;
     private String title;
     private String description;
