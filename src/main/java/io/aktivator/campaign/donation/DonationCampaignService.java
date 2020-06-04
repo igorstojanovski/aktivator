@@ -35,16 +35,20 @@ public class DonationCampaignService {
         campaignDto.setOwnerId(donationCampaign.getOwnerId());
         campaignDto.setTitle(donationCampaign.getTitle());
         campaignDto.setLiked(isCampaignLiked(donationCampaign.getLikes(), donationCampaign.getOwnerId()));
-        campaignDto.setLikesCount(donationCampaign.getLikes().size());
+        if(donationCampaign.getLikes() != null) {
+            campaignDto.setLikesCount(donationCampaign.getLikes().size());
+        }
         campaignDto.setCampaignStatus(donationCampaign.getCampaignStatus());
 
         return campaignDto;
     }
 
     private boolean isCampaignLiked(List<Like> likes, Long ownerId) {
-        for(Like like : likes) {
-            if(like.getOwner().getId().equals(ownerId)) {
-                return true;
+        if(likes != null) {
+            for(Like like : likes) {
+                if(like.getOwner().getId().equals(ownerId)) {
+                    return true;
+                }
             }
         }
         return false;
