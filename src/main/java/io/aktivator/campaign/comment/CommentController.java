@@ -5,12 +5,18 @@ import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/campaign/{campaignId}/comment")
@@ -32,7 +38,7 @@ public class CommentController {
         Comment comment = new Comment();
         comment.setCampaignId(campaignId);
         comment.setText(commentCreateCommand.getText());
-        comment.setDate(commentCreateCommand.getDate());
+        comment.setDate(new Date());
         comment.setUserId(user.getId());
         comment = commentService.createComment(comment);
 
@@ -55,10 +61,36 @@ public class CommentController {
     }
 
     @GetMapping
-    public Page<Comment> getAllComments(@PathVariable Long campaignId,
-                                        @SortDefault.SortDefaults({
+    public Page<CommentDto> getAllComments(@PathVariable Long campaignId,
+                                           @SortDefault.SortDefaults({
                                             @SortDefault(sort = "id", direction = Sort.Direction.DESC)
                                         }) Pageable pageable) {
-        return commentService.getComments(campaignId, pageable);
+        Page<Comment> comments = commentService.getComments(campaignId, pageable);
+
+        Page<CommentDto> pagedCommentDtos;
+        if(comments != null) {
+            pagedCommentDtos = getCommentDtos(comments, pageable);
+        } else {
+            pagedCommentDtos = new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+        return pagedCommentDtos;
+    }
+
+    private Page<CommentDto> getCommentDtos(Page<Comment> comments, Pageable pageable) {
+        List<CommentDto> dtos = comments
+                .get()
+                .map(this::getCommentDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(dtos, pageable, dtos.size());
+    }
+
+    private CommentDto getCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setCampaignId(comment.getCampaignId());
+        commentDto.setDate(comment.getDate());
+        commentDto.setText(comment.getText());
+        commentDto.setExternalUserId(userService.getUser(comment.getUserId()).get().getExternalId());
+
+        return commentDto;
     }
 }

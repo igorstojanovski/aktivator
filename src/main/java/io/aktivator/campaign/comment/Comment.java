@@ -1,11 +1,11 @@
 package io.aktivator.campaign.comment;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.aktivator.configuration.UserIdSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class Comment {
     private String text;
     private Long campaignId;
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedDate
     private Date date;
     private boolean visible = true;
 }

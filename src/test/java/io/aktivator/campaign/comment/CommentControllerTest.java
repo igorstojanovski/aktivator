@@ -10,14 +10,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +45,6 @@ class CommentControllerTest {
         user.setId(USER_ID);
 
         createCommand = new CommentCreateCommand();
-        createCommand.setDate(DATE);
         createCommand.setText("This is the comment.");
     }
 
@@ -120,6 +118,18 @@ class CommentControllerTest {
     void shouldContainOwnerObject() {
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
 
-        Page<Comment> response = commentController.getAllComments(123L, pageable);
+        Comment comment = new Comment();
+        comment.setCampaignId(123L);
+        comment.setText("Yoohooo!");
+        comment.setId(1L);
+        comment.setUserId(123L);
+
+        when(commentService.getComments(123L, pageable)).thenReturn(getPageOfList(Collections.singletonList(comment), pageable));
+        Page<CommentDto> result = commentController.getAllComments(123L, pageable);
+        assertThat(result.getContent()).hasSize(1);
+    }
+
+    private Page<Comment> getPageOfList(List<Comment> singletonList, Pageable pageable) {
+        return new PageImpl<>(singletonList, pageable, singletonList.size());
     }
 }

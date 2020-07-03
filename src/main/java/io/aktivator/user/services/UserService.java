@@ -39,6 +39,10 @@ public class UserService {
         return userRepository.findUserByExternalId(externalUserId);
     }
 
+    public Optional<User> getUser(Long userId) {
+        return userRepository.findById(userId);
+    }
+
     public User registerUser() {
         User user = new User();
         user.setExternalId(getExternalUserId());
