@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -123,6 +124,8 @@ class CommentControllerTest {
         comment.setText("Yoohooo!");
         comment.setId(1L);
         comment.setUserId(123L);
+
+        when(userService.getUser(comment.getUserId())).thenReturn(Optional.of(user));
 
         when(commentService.getComments(123L, pageable)).thenReturn(getPageOfList(Collections.singletonList(comment), pageable));
         Page<CommentDto> result = commentController.getAllComments(123L, pageable);
