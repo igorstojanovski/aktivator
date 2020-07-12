@@ -52,7 +52,7 @@ class LikeServiceTest {
         campaign.setId(CAMPAIGN_ID);
 
         when(likeRepository.save(any(Like.class))).thenReturn(createdLike);
-        when(donationService.getCampaign(CAMPAIGN_ID)).thenReturn(campaign);
+        when(donationService.getCampaignDto(CAMPAIGN_ID)).thenReturn(campaign);
         when(userService.getCurrentUser()).thenReturn(user);
 
         Like response = likeService.createLike(CAMPAIGN_ID);

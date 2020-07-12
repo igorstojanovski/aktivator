@@ -52,7 +52,7 @@ class DonationControllerTest {
 
     @Test
     void shouldGoToServiceToGetCampaign() throws DataException {
-        when(donationService.getCampaign(123L)).thenReturn(entity);
+        when(donationService.getCampaignDto(123L)).thenReturn(entity);
         ResponseEntity<DonationDto> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(entity);
@@ -60,7 +60,7 @@ class DonationControllerTest {
 
     @Test
     void shouldReturnStatus404WhenTheCampaignDoesNotAlreadyExist() throws DataException {
-        when(donationService.getCampaign(123L)).thenThrow(new DataException(""));
+        when(donationService.getCampaignDto(123L)).thenThrow(new DataException(""));
         ResponseEntity<DonationDto> response = controller.getCampaign(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

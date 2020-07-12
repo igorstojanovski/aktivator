@@ -15,10 +15,14 @@ public class DonationService {
     @Autowired
     private DonationRepository donationRepository;
 
-    public DonationDto getCampaign(Long campaignId) throws DataException {
-        Donation donation = donationRepository.findById(campaignId)
-                .orElseThrow(() -> new DataException("No such campaign found."));
+    public DonationDto getCampaignDto(Long campaignId) throws DataException {
+        Donation donation = getDonation(campaignId);
         return donationCampaignToDto(donation);
+    }
+
+    public Donation getDonation(Long campaignId) {
+        return donationRepository.findById(campaignId)
+                    .orElseThrow(() -> new DataException("No such campaign found."));
     }
 
     Donation save(DonationDto donationCampaignEntity, Long ownerId) {

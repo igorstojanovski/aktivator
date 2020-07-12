@@ -82,7 +82,7 @@ class DonationServiceTest {
     @Test
     void shouldGoToRepoToGetById() throws DataException {
         when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.of(entity));
-        DonationDto found = service.getCampaign(CAMPAIGN_ID);
+        DonationDto found = service.getCampaignDto(CAMPAIGN_ID);
 
         assertThat(found.getDescription()).isEqualTo("Quo vadis?!");
     }
@@ -101,7 +101,7 @@ class DonationServiceTest {
         entity.setLikes(likes);
 
         when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.of(entity));
-        DonationDto found = service.getCampaign(CAMPAIGN_ID);
+        DonationDto found = service.getCampaignDto(CAMPAIGN_ID);
 
         assertThat(found.isLiked()).isTrue();
         assertThat(found.getLikesCount()).isEqualTo(1);
@@ -110,7 +110,7 @@ class DonationServiceTest {
     @Test
     void shouldThrowWhenCampaignDoesNotExist() {
         when(repository.findById(CAMPAIGN_ID)).thenReturn(Optional.empty());
-        Assertions.assertThrows(DataException.class, () -> service.getCampaign(CAMPAIGN_ID));
+        Assertions.assertThrows(DataException.class, () -> service.getCampaignDto(CAMPAIGN_ID));
     }
 
     @Test

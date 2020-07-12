@@ -50,7 +50,7 @@ public class DonationController {
     @GetMapping("/{campaignId}")
     public ResponseEntity<DonationDto> getCampaign(@PathVariable Long campaignId) {
         try {
-            return new ResponseEntity<>(donationService.getCampaign(campaignId), HttpStatus.OK);
+            return new ResponseEntity<>(donationService.getCampaignDto(campaignId), HttpStatus.OK);
         } catch (DataException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
