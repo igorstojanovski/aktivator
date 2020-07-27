@@ -15,9 +15,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AuthenticationServiceClient authClient;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AuthenticationServiceClient authClient) {
+        this.authClient = authClient;
         this.userRepository = userRepository;
     }
 
@@ -43,9 +45,17 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public User registerUser() {
+    public User registerUser(String externalUserId) {
         User user = new User();
-        user.setExternalId(getExternalUserId());
+        user.setExternalId(externalUserId);
         return userRepository.save(user);
+    }
+
+    public User registerUser() {
+        return registerUser(getExternalUserId());
+    }
+
+    public AuthUserDTO getAuthUserInfo(String externalId) throws AutherizationServiceException {
+        return authClient.getUserByExternalId(externalId);
     }
 }

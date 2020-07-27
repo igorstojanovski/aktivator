@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -32,4 +33,5 @@ public class DonationDto {
     private boolean liked;
     private int likesCount;
     private CampaignStatus campaignStatus;
+    private BigDecimal balance;
 }

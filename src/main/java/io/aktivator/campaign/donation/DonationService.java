@@ -2,10 +2,15 @@ package io.aktivator.campaign.donation;
 
 import io.aktivator.campaign.CampaignStatus;
 import io.aktivator.campaign.like.Like;
+import io.aktivator.events.PaymentsService;
 import io.aktivator.exceptions.DataException;
+import io.aktivator.user.model.User;
+import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +18,11 @@ import java.util.List;
 @Service
 public class DonationService {
     @Autowired
+    private UserService userService;
+    @Autowired
     private DonationRepository donationRepository;
+    @Autowired
+    private PaymentsService paymentsService;
 
     public DonationDto getCampaignDto(Long campaignId) throws DataException {
         Donation donation = getDonation(campaignId);
@@ -43,7 +52,7 @@ public class DonationService {
             campaignDto.setLikesCount(donation.getLikes().size());
         }
         campaignDto.setCampaignStatus(donation.getCampaignStatus());
-
+        campaignDto.setBalance(paymentsService.getTotalDonations(donation.getId()));
         return campaignDto;
     }
 
@@ -73,5 +82,16 @@ public class DonationService {
 
     Page<Donation> getAllCampaigns(Pageable pageable) {
         return donationRepository.findAll(pageable);
+    }
+
+    public ResponseEntity<Donation> saveCampaign(DonationDto createRequest) {
+        return saveCampaign(createRequest, userService.getCurrentUser());
+    }
+
+    public ResponseEntity<Donation> saveCampaign(DonationDto createRequest, User currentUser) {
+        ResponseEntity<Donation> donationCampaignResponseEntity;
+        Donation saved = save(createRequest, currentUser.getId());
+        donationCampaignResponseEntity = new ResponseEntity<>(saved, HttpStatus.OK);
+        return donationCampaignResponseEntity;
     }
 }

@@ -3,11 +3,13 @@ package io.aktivator.events;
 import io.aktivator.campaign.donation.Donation;
 import io.aktivator.campaign.donation.DonationService;
 import io.aktivator.user.model.User;
+import io.aktivator.user.services.AutherizationServiceException;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,12 +26,15 @@ public class PaymentSubmittedService {
     private DonationService donationService;
 
     public void addPaymentSubmittedEvent(PaymentSubmittedEventDTO paymentSubmittedEventDTO) {
-        PaymentSubmittedEvent paymentSubmittedEvent = convertToPaymentSubmittedEvent(paymentSubmittedEventDTO);
+        addPaymentSubmittedEvent(paymentSubmittedEventDTO, userService.getCurrentUser());
+    }
+
+    public void addPaymentSubmittedEvent(PaymentSubmittedEventDTO paymentSubmittedEventDTO, User currentUser) {
+        PaymentSubmittedEvent paymentSubmittedEvent = convertToPaymentSubmittedEvent(paymentSubmittedEventDTO, currentUser);
         eventRepository.save(paymentSubmittedEvent);
     }
 
-    private PaymentSubmittedEvent convertToPaymentSubmittedEvent(PaymentSubmittedEventDTO paymentSubmittedEventDTO) {
-        User user = userService.getCurrentUser();
+    private PaymentSubmittedEvent convertToPaymentSubmittedEvent(PaymentSubmittedEventDTO paymentSubmittedEventDTO, User user) {
         Donation donation = donationService.getDonation(paymentSubmittedEventDTO.getCampaignId());
 
         PaymentSubmittedEvent paymentSubmittedEvent = new PaymentSubmittedEvent();
@@ -41,7 +46,7 @@ public class PaymentSubmittedService {
         return paymentSubmittedEvent;
     }
 
-    public BigDecimal getSubmittedPaymentsBalance(Long campaignId) {
+    BigDecimal getSubmittedPaymentsBalance(Long campaignId) {
         BigDecimal totalAmount = BigDecimal.ZERO;
         List<PaymentSubmittedEvent> events = paymentSubmittedEventRepository.findByDonationId(campaignId);
 
@@ -50,5 +55,24 @@ public class PaymentSubmittedService {
         }
 
         return totalAmount;
+    }
+
+    public List<PaymentDto> getAllSubmittedPayments(Long campaignId) {
+        List<PaymentSubmittedEvent> events = paymentSubmittedEventRepository.findByDonationId(campaignId);
+        List<PaymentDto> submittedPayments = new ArrayList<>();
+
+        for(PaymentSubmittedEvent submittedEvent : events) {
+            String externalId = submittedEvent.getUser().getExternalId();
+            PaymentDto paymentDto = new PaymentDto();
+            paymentDto.setAmount(submittedEvent.getAmount());
+            paymentDto.setDate(submittedEvent.getDate());
+            try {
+                paymentDto.setDonor(userService.getAuthUserInfo(externalId));
+
+            } catch (AutherizationServiceException e) {
+                e.printStackTrace();
+            }
+        }
+        return submittedPayments;
     }
 }
