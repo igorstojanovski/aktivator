@@ -3,8 +3,15 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=aktivator-io_aktivator-api&metric=coverage)](https://sonarcloud.io/dashboard?id=aktivator-io_aktivator-api)
 
 [![Build Status](https://travis-ci.org/aktivator-io/aktivator-api.svg?branch=master)](https://travis-ci.org/aktivator-io/aktivator-api)
+# Prerequisites
 
-* Run the application:
+You need the following environments set in order to be able to run the application:
+
+* AUTH0_CLIENT_ID
+* AUTH0_CLIENT_SECRET
+* AUTH0_DOMAIN 
+
+# Run the application
 
 `gradle bootRun`
 
