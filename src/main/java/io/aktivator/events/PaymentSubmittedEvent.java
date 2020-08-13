@@ -18,6 +18,6 @@ public class PaymentSubmittedEvent extends Event {
     @OneToOne
     private User user;
     private BigDecimal amount;
-    @OneToOne
+    @OneToOne(targetEntity = Donation.class)
     private Donation donation;
 }
