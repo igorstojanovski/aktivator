@@ -1,0 +1,35 @@
+## MULTIPART (MultipartProperties)
+# Enable multipart uploads
+server:
+    port : 8283
+spring:
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 200MB
+            max-request-size: 215MB
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: https://igorski.eu.auth0.com/
+    jpa:
+        hibernate:
+            ddl-auto: update
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+    datasource:
+        url: "jdbc:postgresql://localhost:5432/postgres"
+        username: postgres
+        password: ${DB_PASSWORD}
+file:
+    upload-dir: ./uploads
+
+auth0:
+    audience: https://buy-it-api.igorski.co
+amazonProperties:
+    endpointUrl: https://s3.eu-north-1.amazonaws.com
+    downloadUrl: http://s3.eu-north-1.amazonaws.com
+    accessKey:
+    secretKey: ${AWS_SECRET_KEY}
+    bucketName: buy-it-api
