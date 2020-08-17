@@ -55,6 +55,10 @@ public class UserService {
         return registerUser(getExternalUserId());
     }
 
+    public AuthUserDTO getAuthUserInfo() throws AutherizationServiceException {
+        return authClient.getUserByExternalId(getExternalUserId());
+    }
+
     public AuthUserDTO getAuthUserInfo(String externalId) throws AutherizationServiceException {
         return authClient.getUserByExternalId(externalId);
     }

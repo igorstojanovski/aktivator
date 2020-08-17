@@ -1,10 +1,13 @@
 package io.aktivator.user;
 
 import io.aktivator.user.model.User;
+import io.aktivator.user.services.AuthUserDTO;
+import io.aktivator.user.services.AutherizationServiceException;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +33,11 @@ public class UserController {
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<AuthUserDTO> getUserInfo() throws AutherizationServiceException {
+        AuthUserDTO userInfoDTO = userService.getAuthUserInfo();
+        return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 }
