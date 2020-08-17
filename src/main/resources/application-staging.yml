@@ -1,7 +1,7 @@
 ## MULTIPART (MultipartProperties)
 # Enable multipart uploads
 server:
-    port : 8283
+    port : 8284
 spring:
     servlet:
         multipart:
