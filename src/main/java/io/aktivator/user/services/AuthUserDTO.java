@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,4 +15,5 @@ public class AuthUserDTO {
     private String email;
     private String nickname;
     private String photoUrl;
+    private Map<String, Object> metadata;
 }

@@ -1,5 +1,6 @@
 package io.aktivator.user;
 
+import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.AuthUserDTO;
 import io.aktivator.user.services.AutherizationServiceException;
@@ -7,10 +8,7 @@ import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -39,5 +37,11 @@ public class UserController {
     public ResponseEntity<AuthUserDTO> getUserInfo() throws AutherizationServiceException {
         AuthUserDTO userInfoDTO = userService.getAuthUserInfo();
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<Object> editUserInfo(@RequestBody AuthUserDTO authUserDTO) throws DataException {
+        userService.updateUserInfo(authUserDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,5 +1,7 @@
 package io.aktivator.user.services;
 
+import com.auth0.exception.Auth0Exception;
+import io.aktivator.exceptions.DataException;
 import io.aktivator.user.exceptions.UserNotRegisteredException;
 import io.aktivator.user.model.User;
 import io.aktivator.user.repository.UserRepository;
@@ -61,5 +63,17 @@ public class UserService {
 
     public AuthUserDTO getAuthUserInfo(String externalId) throws AutherizationServiceException {
         return authClient.getUserByExternalId(externalId);
+    }
+
+    public void updateUserInfo(AuthUserDTO authUserDTO) {
+        if(authUserDTO.getEmail().isEmpty() || authUserDTO.getName().isEmpty()) {
+            throw new DataException("Email and name cannot be empty.");
+        }
+
+        try {
+            authClient.updateUserInfo(authUserDTO, getExternalUserId());
+        } catch (AutherizationServiceException | Auth0Exception e) {
+            throw new DataException(e);
+        }
     }
 }

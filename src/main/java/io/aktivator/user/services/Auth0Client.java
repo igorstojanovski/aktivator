@@ -82,23 +82,30 @@ public class Auth0Client implements AuthenticationServiceClient {
 
     private List<AuthUserDTO> getUserByQuery(String query) throws Auth0Exception {
         System.out.println("Querying authentication service: " + query);
-        UserFilter userFilter = new UserFilter();
-        userFilter.withQuery(query);
-        UsersPage result = managementAPI.users().list(userFilter).execute();
-        List<User> items = result.getItems();
+        List<User> items = getUsers(query);
         List<AuthUserDTO> authUsers = new ArrayList<>();
 
         for(User user : items) {
+
             AuthUserDTO authUserDTO = new AuthUserDTO();
             authUserDTO.setEmail(user.getEmail());
             authUserDTO.setName(user.getName());
             authUserDTO.setSurname(user.getFamilyName());
             authUserDTO.setNickname(user.getNickname());
             authUserDTO.setPhotoUrl(user.getPicture());
+            authUserDTO.setMetadata(user.getUserMetadata());
+
             authUsers.add(authUserDTO);
         }
 
         return authUsers;
+    }
+
+    private List<User> getUsers(String query) throws Auth0Exception {
+        UserFilter userFilter = new UserFilter();
+        userFilter.withQuery(query);
+        UsersPage result = managementAPI.users().list(userFilter).execute();
+        return result.getItems();
     }
 
     @Override
@@ -115,5 +122,28 @@ public class Auth0Client implements AuthenticationServiceClient {
         }
 
         return authUserDTO;
+    }
+
+    @Override
+    public void updateUserInfo(AuthUserDTO authUserDTO, String externalUserId) throws AutherizationServiceException, Auth0Exception {
+
+        User userToEdit = getUserById(externalUserId);
+
+        userToEdit.setEmail(authUserDTO.getEmail());
+        userToEdit.setName(authUserDTO.getName());
+        userToEdit.setFamilyName(authUserDTO.getSurname());
+        userToEdit.setNickname(authUserDTO.getNickname());
+        userToEdit.setPicture(authUserDTO.getPhotoUrl());
+        userToEdit.setUserMetadata(authUserDTO.getMetadata());
+        managementAPI.users().update(externalUserId, userToEdit);
+    }
+
+    private User getUserById(String externalUserId) throws Auth0Exception, AutherizationServiceException {
+        List<User> users = getUsers("user_id:" + externalUserId);
+        if(users.size() != 1) {
+            throw new AutherizationServiceException("Got wrong user response from authentication service.");
+        }
+
+        return users.get(0);
     }
 }
