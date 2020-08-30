@@ -109,23 +109,23 @@ public class Auth0Client implements AuthenticationServiceClient {
     }
 
     @Override
-    public AuthUserDTO getUserByExternalId(String externalId) throws AutherizationServiceException {
+    public AuthUserDTO getUserByExternalId(String externalId) throws AuthorizationServiceException {
         AuthUserDTO authUserDTO;
         try {
             List<AuthUserDTO> users = getUserByQuery("user_id:" + externalId);
             if(users.size() != 1) {
-                throw new AutherizationServiceException("Got wrong user response from authentication service.");
+                throw new AuthorizationServiceException("Got wrong user response from authentication service.");
             }
             authUserDTO = users.get(0);
         } catch (Auth0Exception e) {
-            throw new AutherizationServiceException(e);
+            throw new AuthorizationServiceException(e);
         }
 
         return authUserDTO;
     }
 
     @Override
-    public void updateUserInfo(AuthUserDTO authUserDTO, String externalUserId) throws AutherizationServiceException, Auth0Exception {
+    public void updateUserInfo(AuthUserDTO authUserDTO, String externalUserId) throws AuthorizationServiceException, Auth0Exception {
 
         User userToEdit = getUserById(externalUserId);
 
@@ -138,10 +138,10 @@ public class Auth0Client implements AuthenticationServiceClient {
         managementAPI.users().update(externalUserId, userToEdit);
     }
 
-    private User getUserById(String externalUserId) throws Auth0Exception, AutherizationServiceException {
+    private User getUserById(String externalUserId) throws Auth0Exception, AuthorizationServiceException {
         List<User> users = getUsers("user_id:" + externalUserId);
         if(users.size() != 1) {
-            throw new AutherizationServiceException("Got wrong user response from authentication service.");
+            throw new AuthorizationServiceException("Got wrong user response from authentication service.");
         }
 
         return users.get(0);

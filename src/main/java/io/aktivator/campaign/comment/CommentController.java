@@ -2,6 +2,7 @@ package io.aktivator.campaign.comment;
 
 import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.User;
+import io.aktivator.user.services.AuthUserDTO;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -86,10 +87,13 @@ public class CommentController {
 
     private CommentDto getCommentDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
+        commentDto.setId(comment.getId());
         commentDto.setCampaignId(comment.getCampaignId());
         commentDto.setDate(comment.getDate());
         commentDto.setText(comment.getText());
-        commentDto.setExternalUserId(userService.getUser(comment.getUserId()).get().getExternalId());
+        User internalUser = userService.getUser(comment.getUserId()).get();
+        AuthUserDTO authUser = userService.getAuthUserInfo(internalUser.getExternalId());
+        commentDto.setUser(authUser);
 
         return commentDto;
     }

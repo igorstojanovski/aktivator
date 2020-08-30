@@ -3,7 +3,7 @@ package io.aktivator.events;
 import io.aktivator.campaign.donation.Donation;
 import io.aktivator.campaign.donation.DonationService;
 import io.aktivator.user.model.User;
-import io.aktivator.user.services.AutherizationServiceException;
+import io.aktivator.user.services.AuthorizationServiceException;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,7 +69,7 @@ public class PaymentSubmittedService {
             try {
                 paymentDto.setDonor(userService.getAuthUserInfo(externalId));
 
-            } catch (AutherizationServiceException e) {
+            } catch (AuthorizationServiceException e) {
                 e.printStackTrace();
             }
         }

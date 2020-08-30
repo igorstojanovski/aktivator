@@ -3,7 +3,7 @@ package io.aktivator.user;
 import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.AuthUserDTO;
-import io.aktivator.user.services.AutherizationServiceException;
+import io.aktivator.user.services.AuthorizationServiceException;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<AuthUserDTO> getUserInfo() throws AutherizationServiceException {
+    public ResponseEntity<AuthUserDTO> getUserInfo() throws AuthorizationServiceException {
         AuthUserDTO userInfoDTO = userService.getAuthUserInfo();
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }

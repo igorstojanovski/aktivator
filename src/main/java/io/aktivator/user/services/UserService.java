@@ -57,11 +57,11 @@ public class UserService {
         return registerUser(getExternalUserId());
     }
 
-    public AuthUserDTO getAuthUserInfo() throws AutherizationServiceException {
+    public AuthUserDTO getAuthUserInfo() throws AuthorizationServiceException {
         return authClient.getUserByExternalId(getExternalUserId());
     }
 
-    public AuthUserDTO getAuthUserInfo(String externalId) throws AutherizationServiceException {
+    public AuthUserDTO getAuthUserInfo(String externalId) throws AuthorizationServiceException {
         return authClient.getUserByExternalId(externalId);
     }
 
@@ -72,8 +72,8 @@ public class UserService {
 
         try {
             authClient.updateUserInfo(authUserDTO, getExternalUserId());
-        } catch (AutherizationServiceException | Auth0Exception e) {
-            throw new DataException(e);
+        } catch (Auth0Exception e) {
+            throw new AuthorizationServiceException(e);
         }
     }
 }
