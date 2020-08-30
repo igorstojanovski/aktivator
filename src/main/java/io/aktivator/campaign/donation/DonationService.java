@@ -94,4 +94,8 @@ public class DonationService {
         donationCampaignResponseEntity = new ResponseEntity<>(saved, HttpStatus.OK);
         return donationCampaignResponseEntity;
     }
+
+    public Page<Donation> getDonations(Pageable pageable, String internalUserId) {
+        return donationRepository.findByOwnerId(Long.valueOf(internalUserId), pageable);
+    }
 }

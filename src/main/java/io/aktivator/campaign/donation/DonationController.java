@@ -45,10 +45,14 @@ public class DonationController {
     }
 
     @GetMapping
-    public Page<Donation> getAllCampaigns(
+    public Page<Donation> getDonations(
         @SortDefault.SortDefaults({
             @SortDefault(sort = "id", direction = Sort.Direction.DESC)
-        }) Pageable pageable) {
-        return donationService.getAllCampaigns(pageable);
+        }) Pageable pageable, @RequestParam(required = false) String userId) {
+        if(userId != null) {
+            return donationService.getDonations(pageable, userId);
+        } else {
+            return donationService.getAllCampaigns(pageable);
+        }
     }
 }
