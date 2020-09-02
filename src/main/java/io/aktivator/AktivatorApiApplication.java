@@ -5,6 +5,7 @@ import io.aktivator.campaign.donation.DonationDto;
 import io.aktivator.campaign.donation.DonationService;
 import io.aktivator.events.PaymentSubmittedEventDTO;
 import io.aktivator.events.PaymentSubmittedService;
+import io.aktivator.notifications.NotificationService;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.joda.time.DateTime;
@@ -27,6 +28,8 @@ public class AktivatorApiApplication {
 	private DonationService donationService;
 	@Autowired
 	private PaymentSubmittedService paymentSubmittedService;
+	@Autowired
+	private NotificationService notificationService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AktivatorApiApplication.class, args);
@@ -55,11 +58,15 @@ public class AktivatorApiApplication {
 		paymentEvent.setCampaignId(campaign.getBody().getId());
 		paymentEvent.setAmount(BigDecimal.valueOf(220L));
 		paymentSubmittedService.addPaymentSubmittedEvent(paymentEvent, registeredUser);
+
+		notificationService.createNotification("Test one", "A very important notification", registeredUser);
+		notificationService.createNotification("Test Two", "This notification is not so important really.", registeredUser);
 	}
 
 	private Date getDate(DateTime dateRedeemed) {
 		DateTime dateTimeBerlin = dateRedeemed.withZone(DateTimeZone.forID("Europe/Berlin"));
 		return dateTimeBerlin.toLocalDateTime().toDate();
+
 	}
 
 }
