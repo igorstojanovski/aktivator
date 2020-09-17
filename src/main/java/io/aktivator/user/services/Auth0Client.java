@@ -56,7 +56,9 @@ public class Auth0Client implements AuthenticationServiceClient {
         String json = tokenJsonResponse.body();
 
         TokenResponse tokenResponse = OBJECT_MAPPER.readValue(json, TokenResponse.class);
-
+        if(tokenResponse != null && tokenResponse.getError() != null) {
+            throw new AuthorizationServiceException(tokenResponse.getError() + " : " + tokenResponse.getError_description());
+        }
         managementAPI = new ManagementAPI(auth0Domain, tokenResponse.getAccess_token());
     }
 

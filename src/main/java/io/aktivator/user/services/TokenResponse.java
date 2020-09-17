@@ -14,5 +14,6 @@ public class TokenResponse {
     private String scope;
 //    @JsonProperty("token_type")
     private String token_type;
-
+    private String error;
+    private String error_description;
 }
