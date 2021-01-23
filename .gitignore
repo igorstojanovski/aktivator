@@ -36,3 +36,4 @@ build/
 !.elasticbeanstalk/*.global.yml
 
 .gradle/
+/Causea.postman_environment.json
