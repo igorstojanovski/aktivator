@@ -20,7 +20,6 @@ public class DonationDto {
     private Long id;
     private String title;
     private String description;
-    @JsonSerialize(converter = UserIdSerializer.class)
     private Long ownerId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
