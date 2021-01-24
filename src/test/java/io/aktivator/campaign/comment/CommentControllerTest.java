@@ -87,7 +87,7 @@ class CommentControllerTest {
     void shouldRemoveCommentForOwner() throws DataException {
         when(commentService.isOwner(123L, USER_ID)).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(user);
-        ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
+        ResponseEntity<String> response = commentController.deleteComment(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -95,7 +95,7 @@ class CommentControllerTest {
     void shouldBe403WhenCommentIsNotOwnedByUser() throws DataException {
         when(commentService.isOwner(123L, USER_ID)).thenReturn(false);
         when(userService.getCurrentUser()).thenReturn(user);
-        ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
+        ResponseEntity<String> response = commentController.deleteComment(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
@@ -103,7 +103,7 @@ class CommentControllerTest {
     void shouldBe404WhenCommentIdDoesNotExist() throws DataException {
         when(userService.getCurrentUser()).thenReturn(user);
         when(commentService.isOwner(123L, USER_ID)).thenThrow(DataException.class);
-        ResponseEntity<String> response = commentController.deleteComment(1L, 123L);
+        ResponseEntity<String> response = commentController.deleteComment(123L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
