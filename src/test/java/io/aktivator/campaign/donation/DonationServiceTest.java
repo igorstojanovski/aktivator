@@ -1,6 +1,7 @@
 package io.aktivator.campaign.donation;
 
 import io.aktivator.campaign.like.Like;
+import io.aktivator.events.PaymentsService;
 import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.User;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +35,8 @@ class DonationServiceTest {
     public static final long CAMPAIGN_ID = 123L;
     @Mock
     private DonationRepository repository;
+    @Mock
+    private PaymentsService paymentsService;
     @InjectMocks
     private DonationService service;
     private Donation entity;
