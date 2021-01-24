@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,7 +48,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long campaignId, @PathVariable Long commentId) {
+    public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
         User user = userService.getCurrentUser();
         try {
             if (commentService.isOwner(commentId, user.getId())) {
@@ -91,7 +92,8 @@ public class CommentController {
         commentDto.setCampaignId(comment.getCampaignId());
         commentDto.setDate(comment.getDate());
         commentDto.setText(comment.getText());
-        User internalUser = userService.getUser(comment.getUserId()).get();
+        User internalUser = userService.getUser(comment.getUserId())
+                .orElseThrow(() -> new DataException("No such user found."));
         AuthUserDTO authUser = userService.getAuthUserInfo(internalUser.getExternalId());
         commentDto.setUser(authUser);
 
