@@ -11,4 +11,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     Optional<User> findUserByExternalId(String externalId);
 
+    Optional<User> findUserById(Long id);
 }

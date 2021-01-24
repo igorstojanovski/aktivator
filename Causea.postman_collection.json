@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "628afa66-ef24-4ff7-932a-faf59f866143",
+		"_postman_id": "5420b699-d296-4e4d-9c6e-58184d93c2e8",
 		"name": "Causea",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -87,7 +87,7 @@
 			"response": []
 		},
 		{
-			"name": "User - Current",
+			"name": "User - Current (ID = 2)",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -105,6 +105,31 @@
 					"path": [
 						"api",
 						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User - ID 1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{access_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{causea_url}}/api/user/1",
+					"host": [
+						"{{causea_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"1"
 					]
 				}
 			},
@@ -495,7 +520,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{causea_url}}/api/campaign/1/comment?page=0&limit=10",
+					"raw": "http://localhost:8283/api/campaign/1/comment?page=0&limit=10",
 					"protocol": "http",
 					"host": [
 						"localhost"

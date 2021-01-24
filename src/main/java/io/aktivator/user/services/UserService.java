@@ -76,4 +76,10 @@ public class UserService {
             throw new AuthorizationServiceException(e);
         }
     }
+
+    public AuthUserDTO getUserInfo(Long userId) {
+        String externalId = userRepository.findUserById(userId)
+                .orElseThrow(() -> new DataException("No such user ID found.")).getExternalId();
+        return getAuthUserInfo(externalId);
+    }
 }

@@ -39,6 +39,12 @@ public class UserController {
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<AuthUserDTO> getUserInfoById(@PathVariable Long userId) throws AuthorizationServiceException {
+        AuthUserDTO userInfoDTO = userService.getUserInfo(userId);
+        return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
+    }
+
     @PutMapping
     public ResponseEntity<Object> editUserInfo(@RequestBody AuthUserDTO authUserDTO) throws DataException {
         userService.updateUserInfo(authUserDTO);
