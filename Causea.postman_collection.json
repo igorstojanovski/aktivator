@@ -87,6 +87,75 @@
 			"response": []
 		},
 		{
+			"name": "User - Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"externalIdOne\", jsonData.externalId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{causea_url}}/api/user",
+					"host": [
+						"{{causea_url}}"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User - Register Copy",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{        \r\n    \"name\": \"Igor\",\r\n    \"surname\": \"Stojanovski\",\r\n    \"email\": \"igorce@outlook.com\",\r\n    \"nickname\": \"igorce\",\r\n    \"photoUrl\": \"https://s.gravatar.com/avatar/1b3258048a587ef0a9fcfbed30b6c866?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fig.png\",\r\n    \"longAddress\": \"Somewhere over the rainbow\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{causea_url}}/api/user",
+					"host": [
+						"{{causea_url}}"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "User - Current (ID = 2)",
 			"request": {
 				"method": "GET",
@@ -130,30 +199,6 @@
 						"api",
 						"user",
 						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User - Register",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{access_token}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{causea_url}}/api/user",
-					"host": [
-						"{{causea_url}}"
-					],
-					"path": [
-						"api",
-						"user"
 					]
 				}
 			},
