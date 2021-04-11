@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -94,7 +93,7 @@ public class CommentController {
         commentDto.setText(comment.getText());
         User internalUser = userService.getUser(comment.getUserId())
                 .orElseThrow(() -> new DataException("No such user found."));
-        AuthUserDTO authUser = userService.getAuthUserInfo(internalUser.getExternalId());
+        AuthUserDTO authUser = userService.getUserInformation(internalUser.getExternalId());
         commentDto.setUser(authUser);
 
         return commentDto;

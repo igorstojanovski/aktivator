@@ -4,6 +4,7 @@ import com.auth0.exception.Auth0Exception;
 import io.aktivator.exceptions.DataException;
 import io.aktivator.user.exceptions.UserNotRegisteredException;
 import io.aktivator.user.model.User;
+import io.aktivator.user.model.UserInformation;
 import io.aktivator.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -50,6 +51,7 @@ public class UserService {
     public User registerUser(String externalUserId) {
         User user = new User();
         user.setExternalId(externalUserId);
+        user.setUserInformation(new UserInformation());
         return userRepository.save(user);
     }
 
@@ -57,21 +59,41 @@ public class UserService {
         return registerUser(getExternalUserId());
     }
 
-    public AuthUserDTO getAuthUserInfo() throws AuthorizationServiceException {
-        return authClient.getUserByExternalId(getExternalUserId());
+    public AuthUserDTO getUserInformation() throws AuthorizationServiceException {
+        AuthUserDTO dto = authClient.getUserByExternalId(getExternalUserId());
+        User user = userRepository.findUserByExternalId(dto.getExternalId()).orElseThrow(() -> new DataException("No such user found."));
+        dto.setLongAddress(user.getUserInformation().getLongAddress());
+        dto.setExternalId(null);
+        return dto;
     }
 
-    public AuthUserDTO getAuthUserInfo(String externalId) throws AuthorizationServiceException {
+    public AuthUserDTO getUserInformation(String externalId) throws AuthorizationServiceException {
         return authClient.getUserByExternalId(externalId);
     }
 
     public void updateUserInfo(AuthUserDTO authUserDTO) {
         if(authUserDTO.getEmail().isEmpty() || authUserDTO.getName().isEmpty()) {
-            throw new DataException("Email and name cannot be empty.");
+            throw new DataException("Missing mandatory User information.");
         }
 
+        updateAuth0User(authUserDTO);
+        updateInternalUserInformation(authUserDTO);
+    }
+
+    private void updateInternalUserInformation(AuthUserDTO authUserDTO) {
+        User user = userRepository.findUserByExternalId(authUserDTO.getExternalId()).orElseThrow(() -> new DataException("No user with such external Id was found."));
+        UserInformation userInformation = user.getUserInformation();
+        if(userInformation == null) {
+            userInformation = new UserInformation();
+        }
+        userInformation.setLongAddress(authUserDTO.getLongAddress());
+        user.setUserInformation(userInformation);
+        userRepository.save(user);
+    }
+
+    private void updateAuth0User(AuthUserDTO authUserDTO) {
         try {
-            authClient.updateUserInfo(authUserDTO, getExternalUserId());
+            authClient.updateUserInfo(authUserDTO);
         } catch (Auth0Exception e) {
             throw new AuthorizationServiceException(e);
         }
@@ -80,6 +102,6 @@ public class UserService {
     public AuthUserDTO getUserInfo(Long userId) {
         String externalId = userRepository.findUserById(userId)
                 .orElseThrow(() -> new DataException("No such user ID found.")).getExternalId();
-        return getAuthUserInfo(externalId);
+        return getUserInformation(externalId);
     }
 }

@@ -15,4 +15,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String externalId;
+    @OneToOne(cascade=CascadeType.ALL)
+    private UserInformation userInformation;
 }

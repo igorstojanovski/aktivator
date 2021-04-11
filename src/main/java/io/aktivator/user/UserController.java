@@ -15,9 +15,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
+    private final UserService userService;
 
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public ResponseEntity<User> registerUser() {
@@ -35,7 +38,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<AuthUserDTO> getUserInfo() throws AuthorizationServiceException {
-        AuthUserDTO userInfoDTO = userService.getAuthUserInfo();
+        AuthUserDTO userInfoDTO = userService.getUserInformation();
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 
@@ -47,6 +50,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<Object> editUserInfo(@RequestBody AuthUserDTO authUserDTO) throws DataException {
+        authUserDTO.setExternalId(userService.getExternalUserId());
         userService.updateUserInfo(authUserDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
