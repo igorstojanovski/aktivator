@@ -135,7 +135,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{        \r\n    \"name\": \"Igor\",\r\n    \"surname\": \"Stojanovski\",\r\n    \"email\": \"igorce@outlook.com\",\r\n    \"nickname\": \"igorce\",\r\n    \"photoUrl\": \"https://s.gravatar.com/avatar/1b3258048a587ef0a9fcfbed30b6c866?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fig.png\",\r\n    \"longAddress\": \"Somewhere over the rainbow\"\r\n}",
+					"raw": "{        \r\n    \"name\": \"Igor\",\r\n    \"surname\": \"Stojanovski\",\r\n    \"longAddress\": \"Somewhere over the rainbow\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

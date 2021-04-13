@@ -67,7 +67,7 @@ public class PaymentSubmittedService {
             paymentDto.setAmount(submittedEvent.getAmount());
             paymentDto.setDate(submittedEvent.getDate());
             try {
-                paymentDto.setDonor(userService.getUserInformation(externalId));
+                paymentDto.setDonor(userService.getInformationExternal(externalId));
 
             } catch (AuthorizationServiceException e) {
                 e.printStackTrace();

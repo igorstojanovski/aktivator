@@ -122,14 +122,14 @@ public class Auth0Client implements AuthenticationServiceClient {
         } catch (Auth0Exception e) {
             throw new AuthorizationServiceException(e);
         }
-        authUserDTO.setExternalId(externalId);
+
         return authUserDTO;
     }
 
     @Override
-    public void updateUserInfo(AuthUserDTO authUserDTO) throws AuthorizationServiceException, Auth0Exception {
+    public void updateUserInfo(AuthUserDTO authUserDTO, String externalId) throws AuthorizationServiceException, Auth0Exception {
 
-        User userToEdit = getUserById(authUserDTO.getExternalId());
+        User userToEdit = getUserById(externalId);
 
         userToEdit.setEmail(authUserDTO.getEmail());
         userToEdit.setName(authUserDTO.getName());
@@ -137,7 +137,7 @@ public class Auth0Client implements AuthenticationServiceClient {
         userToEdit.setNickname(authUserDTO.getNickname());
         userToEdit.setPicture(authUserDTO.getPhotoUrl());
         userToEdit.setUserMetadata(authUserDTO.getMetadata());
-        managementAPI.users().update(authUserDTO.getExternalId(), userToEdit);
+        managementAPI.users().update(externalId, userToEdit);
     }
 
     private User getUserById(String externalUserId) throws Auth0Exception, AuthorizationServiceException {

@@ -93,7 +93,7 @@ public class CommentController {
         commentDto.setText(comment.getText());
         User internalUser = userService.getUser(comment.getUserId())
                 .orElseThrow(() -> new DataException("No such user found."));
-        AuthUserDTO authUser = userService.getUserInformation(internalUser.getExternalId());
+        AuthUserDTO authUser = userService.getInformationExternal(internalUser.getExternalId());
         commentDto.setUser(authUser);
 
         return commentDto;

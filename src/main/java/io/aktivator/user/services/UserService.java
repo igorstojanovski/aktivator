@@ -59,49 +59,39 @@ public class UserService {
         return registerUser(getExternalUserId());
     }
 
-    public AuthUserDTO getUserInformation() throws AuthorizationServiceException {
-        AuthUserDTO dto = authClient.getUserByExternalId(getExternalUserId());
-        User user = userRepository.findUserByExternalId(dto.getExternalId()).orElseThrow(() -> new DataException("No such user found."));
+    public AuthUserDTO getInformationExternal(String externalUserId) throws AuthorizationServiceException {
+        User user = userRepository.findUserByExternalId(externalUserId).orElseThrow(() -> new DataException("No such user found."));
+        return combineUserInformation(externalUserId, user);
+    }
+
+    private AuthUserDTO combineUserInformation(String externalUserId, User user) {
+        AuthUserDTO dto = authClient.getUserByExternalId(externalUserId);
         dto.setLongAddress(user.getUserInformation().getLongAddress());
-        dto.setExternalId(null);
+        dto.setName(user.getUserInformation().getName());
+        dto.setSurname(user.getUserInformation().getSurname());
         return dto;
     }
 
-    public AuthUserDTO getUserInformation(String externalId) throws AuthorizationServiceException {
-        return authClient.getUserByExternalId(externalId);
+    public void updateUserInfo(AuthUserDTO authUserDTO, String externalId) {
+        updateInternalUserInformation(authUserDTO, externalId);
     }
 
-    public void updateUserInfo(AuthUserDTO authUserDTO) {
-        if(authUserDTO.getEmail().isEmpty() || authUserDTO.getName().isEmpty()) {
-            throw new DataException("Missing mandatory User information.");
-        }
-
-        updateAuth0User(authUserDTO);
-        updateInternalUserInformation(authUserDTO);
-    }
-
-    private void updateInternalUserInformation(AuthUserDTO authUserDTO) {
-        User user = userRepository.findUserByExternalId(authUserDTO.getExternalId()).orElseThrow(() -> new DataException("No user with such external Id was found."));
+    private void updateInternalUserInformation(AuthUserDTO authUserDTO, String externalId) {
+        User user = userRepository.findUserByExternalId(externalId).orElseThrow(() -> new DataException("No user with such external Id was found."));
         UserInformation userInformation = user.getUserInformation();
         if(userInformation == null) {
             userInformation = new UserInformation();
         }
         userInformation.setLongAddress(authUserDTO.getLongAddress());
+        userInformation.setName(authUserDTO.getName());
+        userInformation.setSurname(authUserDTO.getSurname());
         user.setUserInformation(userInformation);
         userRepository.save(user);
     }
 
-    private void updateAuth0User(AuthUserDTO authUserDTO) {
-        try {
-            authClient.updateUserInfo(authUserDTO);
-        } catch (Auth0Exception e) {
-            throw new AuthorizationServiceException(e);
-        }
-    }
-
-    public AuthUserDTO getUserInfo(Long userId) {
-        String externalId = userRepository.findUserById(userId)
-                .orElseThrow(() -> new DataException("No such user ID found.")).getExternalId();
-        return getUserInformation(externalId);
+    public AuthUserDTO getInformationInternal(Long userId) {
+        User user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new DataException("No such user ID found."));
+        return combineUserInformation(user.getExternalId(), user);
     }
 }

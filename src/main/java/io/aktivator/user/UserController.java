@@ -1,6 +1,7 @@
 package io.aktivator.user;
 
 import io.aktivator.exceptions.DataException;
+import io.aktivator.exceptions.ResourceAlreadyExists;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.AuthUserDTO;
 import io.aktivator.user.services.AuthorizationServiceException;
@@ -30,7 +31,7 @@ public class UserController {
         if(optionalUser.isEmpty()) {
             user = userService.registerUser();
         } else {
-            user = optionalUser.get();
+            throw new ResourceAlreadyExists("This user is already registered.");
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -38,20 +39,19 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<AuthUserDTO> getUserInfo() throws AuthorizationServiceException {
-        AuthUserDTO userInfoDTO = userService.getUserInformation();
+        AuthUserDTO userInfoDTO = userService.getInformationExternal(userService.getExternalUserId());
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<AuthUserDTO> getUserInfoById(@PathVariable Long userId) throws AuthorizationServiceException {
-        AuthUserDTO userInfoDTO = userService.getUserInfo(userId);
+        AuthUserDTO userInfoDTO = userService.getInformationInternal(userId);
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<Object> editUserInfo(@RequestBody AuthUserDTO authUserDTO) throws DataException {
-        authUserDTO.setExternalId(userService.getExternalUserId());
-        userService.updateUserInfo(authUserDTO);
+        userService.updateUserInfo(authUserDTO, userService.getExternalUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

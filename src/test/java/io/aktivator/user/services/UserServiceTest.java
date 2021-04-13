@@ -28,6 +28,9 @@ class UserServiceTest {
 
     public static final String EXTERNAL_USER_ID = "12user";
     public static final String DUMMY_EMAIL_COM = "dummy@email.com";
+    public static final String USER_ADDRESS = "A very long address.";
+    public static final String SHERLOCK = "Sherlock";
+    public static final String HOLMES = "Holmes";
     private static User user;
     @Captor
     private ArgumentCaptor<User> userCaptor;
@@ -43,14 +46,23 @@ class UserServiceTest {
         user = new User();
         user.setExternalId(EXTERNAL_USER_ID);
         user.setId(1L);
+        user.setUserInformation(getUserInformationStub());
+    }
+
+    private UserInformation getUserInformationStub() {
+        UserInformation userInformation = new UserInformation();
+        userInformation.setLongAddress(USER_ADDRESS);
+        userInformation.setName(SHERLOCK);
+        userInformation.setSurname(HOLMES);
+        return userInformation;
     }
 
     @Test
     public void shouldReturnUserFromRepository() {
-
         when(userRepository.findUserByExternalId(EXTERNAL_USER_ID)).thenReturn(Optional.of(user));
         Optional<User> returnedUser = userService.getUser(EXTERNAL_USER_ID);
         assertThat(returnedUser).isNotEmpty();
+        assertThat(returnedUser.get()).isEqualTo(user);
     }
 
     @Test
@@ -68,23 +80,23 @@ class UserServiceTest {
 
     @Test
     public void shouldGetUserByInternalId() {
+        // The information returned is a combination of information from the identity manager plus
+        // information from the internal database.
+        // First, the internal user needs to be retrieved based on the internal id.
         when(userRepository.findUserById(1L)).thenReturn(Optional.of(user));
         AuthUserDTO auth0User = new AuthUserDTO();
         auth0User.setEmail(DUMMY_EMAIL_COM);
+        auth0User.setName("John");
+        auth0User.setSurname("Watson");
+        // From that object, the external ID is going to be taken.
         when(authClient.getUserByExternalId(user.getExternalId())).thenReturn(auth0User);
 
-        AuthUserDTO authUserDTO = userService.getUserInfo(1L);
+        AuthUserDTO authUserDTO = userService.getInformationInternal(1L);
+
         assertThat(authUserDTO.getEmail()).isEqualTo(DUMMY_EMAIL_COM);
-    }
-
-    @Test
-    public void shouldUpdateUserInAuth0() throws Auth0Exception {
-        AuthUserDTO dto = getAuthUserDTO();
-        when(userRepository.findUserByExternalId(user.getExternalId())).thenReturn(Optional.of(user));
-
-        userService.updateUserInfo(dto);
-
-        verify(authClient).updateUserInfo(dto);
+        assertThat(authUserDTO.getLongAddress()).isEqualTo(USER_ADDRESS);
+        assertThat(authUserDTO.getName()).isEqualTo(SHERLOCK);
+        assertThat(authUserDTO.getSurname()).isEqualTo(HOLMES);
     }
 
     @Test
@@ -94,7 +106,7 @@ class UserServiceTest {
         user.setUserInformation(userInformation);
         when(userRepository.findUserByExternalId(user.getExternalId())).thenReturn(Optional.of(user));
 
-        userService.updateUserInfo(getAuthUserDTO());
+        userService.updateUserInfo(getAuthUserDTO(), user.getExternalId());
 
         verify(userRepository).save(userCaptor.capture());
         assertThat(userCaptor.getValue()).isEqualTo(user);
@@ -103,7 +115,6 @@ class UserServiceTest {
 
     private AuthUserDTO getAuthUserDTO() {
         AuthUserDTO dto = new AuthUserDTO();
-        dto.setExternalId("12user");
         dto.setEmail("user@causea.org");
         dto.setName("Causea");
         Map<String, Object> metadata = new HashMap<>();
