@@ -24,7 +24,7 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
         User user = userService.getCurrentUser();
-        List<Notification> notifications = notificationRepository.findByUserId(user.getId());
+        List<Notification> notifications = notificationRepository.findByUserIdAndSeen(user.getId(), false);
 
         return new ResponseEntity<>(notifications.stream()
                 .map(NotificationDTO::new)

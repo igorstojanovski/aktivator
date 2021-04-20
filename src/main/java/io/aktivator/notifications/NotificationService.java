@@ -18,6 +18,7 @@ public class NotificationService {
         notification.setText(text);
         notification.setTitle(title);
         notification.setUser(user);
+        notification.setSeen(false);
 
         return notificationRepository.save(notification);
     }
