@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  db:
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
+    ports:
+      - "5432:5432"
+    networks:
+      - causea-dev
+    environment:
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=causea
+  pgadmin:
+    image: dpage/pgadmin4
+    networks:
+      - causea-dev
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=igor.stojanovski@igorski.co
+      - PGADMIN_DEFAULT_PASSWORD=verySecret
+      - PGADMIN_LISTEN_PORT=80
+    ports:
+      - "8080:80"
+    volumes:
+      - "./pgadmin/servers.json:/pgadmin4/servers.json"
+  web:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: causea/Dockerfile
+    networks:
+      - causea-dev
+    ports:
+      - "8283:8283"
+    environment:
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+networks:
+  causea-dev:
+    name: causea-dev
