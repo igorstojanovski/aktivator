@@ -37,7 +37,13 @@ public class AktivatorApiApplication {
 
 	@PostConstruct
 	public void initTestData() {
-		User registeredUser = userService.registerUser("auth0|5eac8eda02b1770be4749949");
+		User registeredUser;
+		String externalUserId = "auth0|5eac8eda02b1770be4749949";
+		try {
+			registeredUser = userService.registerUser(externalUserId);
+		} catch (Exception e) {
+			registeredUser = userService.getUser(externalUserId).get();
+		}
 		DonationDto createRequest = new DonationDto();
 		createRequest.setOwnerId(registeredUser.getId());
 		createRequest.setDescription("Test Donation Campaign");

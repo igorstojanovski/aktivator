@@ -1,7 +1,7 @@
 package io.aktivator.user.services;
 
-import com.auth0.exception.Auth0Exception;
 import io.aktivator.exceptions.DataException;
+import io.aktivator.exceptions.ResourceAlreadyExists;
 import io.aktivator.user.exceptions.UserNotRegisteredException;
 import io.aktivator.user.model.User;
 import io.aktivator.user.model.UserInformation;
@@ -48,15 +48,11 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public User registerUser(String externalUserId) {
+    private User registerExternalUser(String externalUserId) {
         User user = new User();
         user.setExternalId(externalUserId);
         user.setUserInformation(new UserInformation());
         return userRepository.save(user);
-    }
-
-    public User registerUser() {
-        return registerUser(getExternalUserId());
     }
 
     public AuthUserDTO getInformationExternal(String externalUserId) throws AuthorizationServiceException {
@@ -93,5 +89,16 @@ public class UserService {
         User user = userRepository.findUserById(userId)
                 .orElseThrow(() -> new DataException("No such user ID found."));
         return combineUserInformation(user.getExternalId(), user);
+    }
+
+    public User registerUser(String externalUserId) {
+        Optional<User> optionalUser = getUser(externalUserId);
+        User user;
+        if(optionalUser.isEmpty()) {
+            user = registerExternalUser(externalUserId);
+        } else {
+            throw new ResourceAlreadyExists("This user is already registered.");
+        }
+        return user;
     }
 }

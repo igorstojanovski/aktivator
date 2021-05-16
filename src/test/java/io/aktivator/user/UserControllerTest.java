@@ -42,17 +42,4 @@ class UserControllerTest {
         verify(userService).updateUserInfo(dtoCaptor.capture(), eq(EXTERNAL_ID));
         assertThat(dtoCaptor.getValue().getEmail()).isEqualTo(USER_CAUSEA_ORG);
     }
-
-    @Test
-    public void shouldThrowExceptionIfUserAlreadyRegistered() {
-        // From the token it gets the externalID.
-        when(userService.getExternalUserId()).thenReturn(EXTERNAL_ID);
-        // It needs to fetch the internal user object for that external ID.
-        when(userService.getUser(EXTERNAL_ID)).thenReturn(Optional.of(new User()));
-
-        assertThatThrownBy(() -> userController.registerUser())
-                .isInstanceOf(ResourceAlreadyExists.class)
-                .hasMessage("This user is already registered.");
-
-    }
 }

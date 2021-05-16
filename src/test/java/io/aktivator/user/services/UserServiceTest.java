@@ -1,6 +1,7 @@
 package io.aktivator.user.services;
 
 import com.auth0.exception.Auth0Exception;
+import io.aktivator.exceptions.ResourceAlreadyExists;
 import io.aktivator.user.exceptions.UserNotRegisteredException;
 import io.aktivator.user.model.User;
 import io.aktivator.user.model.UserInformation;
@@ -121,6 +122,17 @@ class UserServiceTest {
         metadata.put("keyOne", "valueOne");
         dto.setMetadata(metadata);
         return dto;
+    }
+
+    @Test
+    public void shouldThrowExceptionIfUserAlreadyRegistered() {
+        // It needs to fetch the internal user object for that external ID.
+        when(userRepository.findUserByExternalId(EXTERNAL_USER_ID)).thenReturn(Optional.of(new User()));
+
+        assertThatThrownBy(() -> userService.registerUser(EXTERNAL_USER_ID))
+                .isInstanceOf(ResourceAlreadyExists.class)
+                .hasMessage("This user is already registered.");
+
     }
 
 }

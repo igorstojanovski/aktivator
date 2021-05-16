@@ -1,7 +1,6 @@
 package io.aktivator.user;
 
 import io.aktivator.exceptions.DataException;
-import io.aktivator.exceptions.ResourceAlreadyExists;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.AuthUserDTO;
 import io.aktivator.user.services.AuthorizationServiceException;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -25,16 +22,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> registerUser() {
-        String externalUserId = userService.getExternalUserId();
-        Optional<User> optionalUser = userService.getUser(externalUserId);
-        User user;
-        if(optionalUser.isEmpty()) {
-            user = userService.registerUser();
-        } else {
-            throw new ResourceAlreadyExists("This user is already registered.");
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userService.registerUser(userService.getExternalUserId()), HttpStatus.OK);
     }
 
     @GetMapping
