@@ -87,7 +87,7 @@ public class UserService {
 
     public AuthUserDTO getInformationInternal(Long userId) {
         User user = userRepository.findUserById(userId)
-                .orElseThrow(() -> new DataException("No such user ID found."));
+                .orElseThrow(() -> new DataException("No such user ID found: " + userId));
         return combineUserInformation(user.getExternalId(), user);
     }
 

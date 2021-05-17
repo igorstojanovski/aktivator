@@ -119,7 +119,7 @@ class DonationServiceTest {
     @Test
     void shouldGoToRepoToGetAllCampaigns() {
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
-        service.getAllCampaigns(pageable);
+        service.getAllDonations(pageable);
 
         verify(repository).findAll(pageable);
     }
