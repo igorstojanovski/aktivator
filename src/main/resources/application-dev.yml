@@ -1,13 +1,13 @@
 ## MULTIPART (MultipartProperties)
 # Enable multipart uploads
 server:
-    port : 8080
+    port : 8283
 spring:
     jpa:
         hibernate:
             ddl-auto: update
         database-platform: org.hibernate.dialect.PostgreSQLDialect
     datasource:
-        url: ${CAUSEA_STAGING_DB_USER}
-        username: ${CAUSEA_STAGING_DB_USER}
-        password: ${CAUSEA_STAGING_DB_PASSWORD}
+        url: "jdbc:postgresql://localhost:5432/causea"
+        username: postgres
+        password: password123

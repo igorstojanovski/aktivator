@@ -1,7 +1,5 @@
 ## MULTIPART (MultipartProperties)
 # Enable multipart uploads
-server:
-    port : 8283
 spring:
     servlet:
         multipart:
@@ -14,14 +12,6 @@ spring:
             resourceserver:
                 jwt:
                     issuer-uri: https://igorski.eu.auth0.com/
-    jpa:
-        hibernate:
-            ddl-auto: update
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
-    datasource:
-        url: "jdbc:postgresql://db:5432/causea"
-        username: postgres
-        password: password123
 file:
     upload-dir: ./uploads
 
