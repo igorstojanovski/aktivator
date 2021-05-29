@@ -1,5 +1,6 @@
 package io.aktivator.campaign.donation;
 
+import io.aktivator.campaign.CampaignStatus;
 import io.aktivator.campaign.like.Like;
 import io.aktivator.events.PaymentsService;
 import io.aktivator.exceptions.DataException;
@@ -13,16 +14,12 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -58,14 +55,13 @@ class DonationServiceTest {
         entity.setOwnerId(OWNER_ID);
         entity.setDescription("Quo vadis?!");
         entity.setTitle("Latin lessons donation");
+        entity.setLikes(new ArrayList<>());
 
-        createRequest = new DonationDto();
-        createRequest.setTarget(2000L);
-        createRequest.setCreated(created);
-        createRequest.setStartDate(startDate);
-        createRequest.setEndDate(endDate);
-        createRequest.setDescription("Quo vadis?!");
-        createRequest.setTitle("Latin lessons donation");
+        createRequest = new DonationDto(CAMPAIGN_ID,
+                "Latin lessons donation",
+                "Quo vadis?!",
+                OWNER_ID,
+                startDate, endDate, created, 2000L, false, false, 0, CampaignStatus.NEW, BigDecimal.ZERO);
     }
 
     private Date convertLocalDateToDate(LocalDate myLocalDate) {
@@ -118,7 +114,9 @@ class DonationServiceTest {
 
     @Test
     void shouldGoToRepoToGetAllCampaigns() {
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("id")));
+        Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Order.desc("id")));
+        Page<Donation> donationPage = new PageImpl<>(Collections.singletonList(entity), pageable, 1);
+        when(repository.findAll(pageable)).thenReturn(donationPage);
         service.getAllDonations(pageable);
 
         verify(repository).findAll(pageable);

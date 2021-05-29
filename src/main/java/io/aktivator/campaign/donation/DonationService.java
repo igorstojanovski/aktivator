@@ -39,21 +39,20 @@ public class DonationService {
   }
 
   private DonationDto donationCampaignToDto(Donation donation) {
-    DonationDto campaignDto = new DonationDto();
-    campaignDto.setId(donation.getId());
-    campaignDto.setCreated(donation.getCreated());
-    campaignDto.setDescription(donation.getDescription());
-    campaignDto.setEndDate(donation.getEndDate());
-    campaignDto.setFeatured(donation.isFeatured());
-    campaignDto.setOwnerId(donation.getOwnerId());
-    campaignDto.setTitle(donation.getTitle());
-    campaignDto.setLiked(isCampaignLiked(donation.getLikes(), donation.getOwnerId()));
-    if (donation.getLikes() != null) {
-      campaignDto.setLikesCount(donation.getLikes().size());
-    }
-    campaignDto.setCampaignStatus(donation.getCampaignStatus());
-    campaignDto.setBalance(paymentsService.getTotalDonations(donation.getId()));
-    return campaignDto;
+    return new DonationDto(
+        donation.getId(),
+        donation.getTitle(),
+        donation.getDescription(),
+        donation.getOwnerId(),
+        donation.getStartDate(),
+        donation.getEndDate(),
+        donation.getCreated(),
+        donation.getTarget(),
+        donation.isFeatured(),
+        isCampaignLiked(donation.getLikes(), donation.getOwnerId()),
+        donation.getLikes().size(),
+        donation.getCampaignStatus(),
+        paymentsService.getTotalDonations(donation.getId()));
   }
 
   private boolean isCampaignLiked(List<Like> likes, Long ownerId) {
