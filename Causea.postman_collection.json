@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "5420b699-d296-4e4d-9c6e-58184d93c2e8",
+		"_postman_id": "a3fb1d7c-4b1d-4e91-92a6-9041505d1276",
 		"name": "Causea",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Fetch Access Token",
+			"name": "Fetch Access Token -OWNER",
 			"event": [
 				{
 					"listen": "test",
@@ -14,6 +14,87 @@
 						"exec": [
 							"var jsonData = pm.response.json();\r",
 							"pm.environment.set(\"access_token\", \"Bearer \" + jsonData.access_token);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "",
+							"description": "Required for confidential clients.",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "audience",
+							"value": "https://buy-it-api.igorski.co",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "igorce@outlook.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{user_one_pass}}",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://igorski.eu.auth0.com/oauth/token",
+					"protocol": "https",
+					"host": [
+						"igorski",
+						"eu",
+						"auth0",
+						"com"
+					],
+					"path": [
+						"oauth",
+						"token"
+					]
+				},
+				"description": "Fetches a token from Auth0"
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Access Token - DONOR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"access_token_donor\", \"Bearer \" + jsonData.access_token);\r",
 							"\r",
 							"pm.test(\"Successful POST request\", function () {\r",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
@@ -87,7 +168,7 @@
 			"response": []
 		},
 		{
-			"name": "User - Register",
+			"name": "User - Register - DONOR",
 			"event": [
 				{
 					"listen": "test",
@@ -105,7 +186,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "{{access_token}}",
+						"value": "{{access_token_donor}}",
 						"type": "text"
 					}
 				],
@@ -123,7 +204,7 @@
 			"response": []
 		},
 		{
-			"name": "User - Register Copy",
+			"name": "User - Update",
 			"request": {
 				"method": "PUT",
 				"header": [
@@ -156,7 +237,7 @@
 			"response": []
 		},
 		{
-			"name": "User - Current (ID = 2)",
+			"name": "User - OWNER (ID = 2)",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -180,7 +261,7 @@
 			"response": []
 		},
 		{
-			"name": "User - ID 1",
+			"name": "User - DONOR (ID = 1)",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -274,14 +355,81 @@
 			"response": []
 		},
 		{
-			"name": "Like - Campaign 1",
+			"name": "Notifications - All Not Seen - OWNER Copy",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{access_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{causea_url}}/api/notification",
+					"host": [
+						"{{causea_url}}"
+					],
+					"path": [
+						"api",
+						"notification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Notifications - Mark as Seen",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{access_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{causea_url}}/api/notification/5",
+					"host": [
+						"{{causea_url}}"
+					],
+					"path": [
+						"api",
+						"notification",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Donor Like - Campaign 1",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Authorization",
 						"type": "text",
-						"value": "{{access_token}}"
+						"value": "{{access_token_donor}}"
 					}
 				],
 				"url": {
@@ -320,7 +468,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{causea_url}}/api/campaign/donation/?userId=1",
+					"raw": "{{causea_url}}/api/campaign/donation/?userId=2",
 					"host": [
 						"{{causea_url}}"
 					],
@@ -333,7 +481,7 @@
 					"query": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "2"
 						}
 					]
 				}
@@ -418,7 +566,7 @@
 			"response": []
 		},
 		{
-			"name": "Comment",
+			"name": "Comment - Campaign 1",
 			"event": [
 				{
 					"listen": "test",
@@ -453,74 +601,10 @@
 					"raw": "{\n\t\"text\": \"Support!\",\n\t\"date\": \"2019-08-11\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8283/api/campaign/1/comment?page=0&limit=10",
-					"protocol": "http",
+					"raw": "{{causea_url}}/api/campaign/1/comment?page=0&limit=10",
 					"host": [
-						"localhost"
+						"{{causea_url}}"
 					],
-					"port": "8283",
-					"path": [
-						"api",
-						"campaign",
-						"1",
-						"comment"
-					],
-					"query": [
-						{
-							"key": "page",
-							"value": "0"
-						},
-						{
-							"key": "limit",
-							"value": "10"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Comment",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"type": "text",
-						"value": "{{access_token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"text\": \"Support!\",\n\t\"date\": \"2019-08-11\"\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8283/api/campaign/1/comment?page=0&limit=10",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8283",
 					"path": [
 						"api",
 						"campaign",
