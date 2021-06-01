@@ -47,4 +47,8 @@ Then for each request, provide an "Authorization" with that access_token:
 GET /api/campaign/donation HTTP/1.1
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6
 ```
+### To deploy the app
+```
+heroku deploy:jar build/libs/*.jar -app causea-test
+```
   
