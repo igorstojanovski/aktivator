@@ -2,7 +2,7 @@ package io.aktivator.campaign.comment;
 
 import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.User;
-import io.aktivator.user.services.AuthUserDTO;
+import io.aktivator.user.services.UserDto;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -87,7 +87,7 @@ public class CommentController {
         userService
             .getUser(comment.getUserId())
             .orElseThrow(() -> new DataException("No such user found."));
-    AuthUserDTO authUser = userService.getInformationExternal(internalUser.getExternalId());
+    UserDto authUser = userService.getInformationExternal(internalUser.getExternalId());
 
     return new CommentDto(
         comment.getId(), authUser, comment.getText(), comment.getCampaignId(), comment.getDate());

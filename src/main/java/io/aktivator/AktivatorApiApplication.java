@@ -69,9 +69,9 @@ public class AktivatorApiApplication {
     paymentEvent.setAmount(BigDecimal.valueOf(220L));
     paymentSubmittedService.addPaymentSubmittedEvent(paymentEvent, registeredUser);
 
-    notificationService.createNotification(
+    notificationService.createSystemNotification(
         "Test one", "A very important notification", registeredUser);
-    notificationService.createNotification(
+    notificationService.createSystemNotification(
         "Test Two", "This notification is not so important really.", registeredUser);
   }
 

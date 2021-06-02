@@ -2,7 +2,7 @@ package io.aktivator.user;
 
 import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.User;
-import io.aktivator.user.services.AuthUserDTO;
+import io.aktivator.user.services.UserDto;
 import io.aktivator.user.services.AuthorizationServiceException;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +26,20 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<AuthUserDTO> getUserInfo() throws AuthorizationServiceException {
-        AuthUserDTO userInfoDTO = userService.getInformationExternal(userService.getExternalUserId());
+    public ResponseEntity<UserDto> getUserInfo() throws AuthorizationServiceException {
+        UserDto userInfoDTO = userService.getInformationExternal(userService.getExternalUserId());
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<AuthUserDTO> getUserInfoById(@PathVariable Long userId) throws AuthorizationServiceException {
-        AuthUserDTO userInfoDTO = userService.getInformationInternal(userId);
+    public ResponseEntity<UserDto> getUserInfoById(@PathVariable Long userId) throws AuthorizationServiceException {
+        UserDto userInfoDTO = userService.getInformationInternal(userId);
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Object> editUserInfo(@RequestBody AuthUserDTO authUserDTO) throws DataException {
-        userService.updateUserInfo(authUserDTO, userService.getExternalUserId());
+    public ResponseEntity<Object> editUserInfo(@RequestBody UserDto userDto) throws DataException {
+        userService.updateUserInfo(userDto, userService.getExternalUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

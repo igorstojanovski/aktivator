@@ -18,4 +18,5 @@ public class UserInformation {
     private String longAddress;
     private String name;
     private String surname;
+    private String username;
 }

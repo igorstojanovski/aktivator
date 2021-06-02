@@ -25,127 +25,142 @@ import java.util.Map;
 
 @Service
 public class Auth0Client implements AuthenticationServiceClient {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private final AuthAPI authApi;
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private final AuthAPI authApi;
 
-    private final ManagementAPI managementAPI;
+  private final ManagementAPI managementAPI;
 
-    public Auth0Client(@Value("${AUTH0_CLIENT_ID}") String auth0ClientId,
-                       @Value("${AUTH0_CLIENT_SECRET}") String auth0ClientSecret,
-                       @Value("${AUTH0_DOMAIN}") String auth0Domain) throws IOException, InterruptedException {
+  public Auth0Client(
+      @Value("${AUTH0_CLIENT_ID}") String auth0ClientId,
+      @Value("${AUTH0_CLIENT_SECRET}") String auth0ClientSecret,
+      @Value("${AUTH0_DOMAIN}") String auth0Domain)
+      throws IOException, InterruptedException {
 
-        if(auth0ClientId == null || auth0ClientSecret == null || auth0Domain == null) {
-            throw new BadConfigurationException();
-        }
-
-        authApi = new AuthAPI(auth0Domain, auth0ClientId, auth0ClientSecret);
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        String auth0TokenUrl = "https://" + auth0Domain + "/oauth/token";
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(auth0TokenUrl))
-                .timeout(Duration.ofMinutes(1))
-                .POST(HttpRequest.BodyPublishers.ofString("{\"client_id\":\"" + auth0ClientId + "\"," +
-                        "\"client_secret\":\"" + auth0ClientSecret + "\"," +
-                        "\"audience\":\"https://" + auth0Domain + "/api/v2/\"," +
-                        "\"grant_type\":\"client_credentials\"}"))
-
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> tokenJsonResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        String json = tokenJsonResponse.body();
-
-        TokenResponse tokenResponse = OBJECT_MAPPER.readValue(json, TokenResponse.class);
-        if(tokenResponse != null && tokenResponse.getError() != null) {
-            throw new AuthorizationServiceException(tokenResponse.getError() + " : " + tokenResponse.getError_description());
-        }
-        managementAPI = new ManagementAPI(auth0Domain, tokenResponse.getAccess_token());
+    if (auth0ClientId == null || auth0ClientSecret == null || auth0Domain == null) {
+      throw new BadConfigurationException();
     }
 
-    private void getUserInfo(String accessToken) throws Auth0Exception {
-        Request<UserInfo> request = authApi.userInfo(accessToken);
-        UserInfo userInfo = request.execute();
-        Map<String, Object> values = userInfo.getValues();
+    authApi = new AuthAPI(auth0Domain, auth0ClientId, auth0ClientSecret);
+    HttpClient httpClient = HttpClient.newHttpClient();
 
-        for( Map.Entry<String, Object> entry : values.entrySet()) {
-            System.out.println("Key: " + entry.getKey());
-            System.out.println("Value: " + entry.getValue());
-        }
+    String auth0TokenUrl = "https://" + auth0Domain + "/oauth/token";
+    HttpRequest request =
+        HttpRequest.newBuilder()
+            .uri(URI.create(auth0TokenUrl))
+            .timeout(Duration.ofMinutes(1))
+            .POST(
+                HttpRequest.BodyPublishers.ofString(
+                    "{\"client_id\":\""
+                        + auth0ClientId
+                        + "\","
+                        + "\"client_secret\":\""
+                        + auth0ClientSecret
+                        + "\","
+                        + "\"audience\":\"https://"
+                        + auth0Domain
+                        + "/api/v2/\","
+                        + "\"grant_type\":\"client_credentials\"}"))
+            .header("Content-Type", "application/json")
+            .build();
+    HttpResponse<String> tokenJsonResponse =
+        httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    String json = tokenJsonResponse.body();
+
+    TokenResponse tokenResponse = OBJECT_MAPPER.readValue(json, TokenResponse.class);
+    if (tokenResponse != null && tokenResponse.getError() != null) {
+      throw new AuthorizationServiceException(
+          tokenResponse.getError() + " : " + tokenResponse.getError_description());
+    }
+    managementAPI = new ManagementAPI(auth0Domain, tokenResponse.getAccess_token());
+  }
+
+  private void getUserInfo(String accessToken) throws Auth0Exception {
+    Request<UserInfo> request = authApi.userInfo(accessToken);
+    UserInfo userInfo = request.execute();
+    Map<String, Object> values = userInfo.getValues();
+
+    for (Map.Entry<String, Object> entry : values.entrySet()) {
+      System.out.println("Key: " + entry.getKey());
+      System.out.println("Value: " + entry.getValue());
+    }
+  }
+
+  private void getAllUsers() throws Auth0Exception {
+    UserFilter userFilter = new UserFilter();
+    UsersPage result = managementAPI.users().list(userFilter).execute();
+    List<User> items = result.getItems();
+    for (User user : items) {
+      System.out.println(user.getEmail());
+    }
+  }
+
+  private List<UserDto> getUserByQuery(String query) throws Auth0Exception {
+    System.out.println("Querying authentication service: " + query);
+    List<User> items = getUsers(query);
+    List<UserDto> authUsers = new ArrayList<>();
+
+    for (User user : items) {
+      authUsers.add(
+          new UserDto(
+              user.getName(),
+              user.getFamilyName(),
+              user.getEmail(),
+              user.getNickname(),
+              user.getPicture(),
+              user.getUserMetadata(),
+              null));
     }
 
-    private void getAllUsers() throws Auth0Exception {
-        UserFilter userFilter = new UserFilter();
-        UsersPage result = managementAPI.users().list(userFilter).execute();
-        List<User> items = result.getItems();
-        for(User user : items) {
-            System.out.println(user.getEmail());
-        }
+    return authUsers;
+  }
+
+  private List<User> getUsers(String query) throws Auth0Exception {
+    UserFilter userFilter = new UserFilter();
+    userFilter.withQuery(query);
+    UsersPage result = managementAPI.users().list(userFilter).execute();
+    return result.getItems();
+  }
+
+  @Override
+  public UserDto getUserByExternalId(String externalId) throws AuthorizationServiceException {
+    UserDto userDto;
+    try {
+      List<UserDto> users = getUserByQuery("user_id:" + externalId);
+      if (users.size() != 1) {
+        throw new AuthorizationServiceException(
+            "Got wrong user response from authentication service.");
+      }
+      userDto = users.get(0);
+    } catch (Auth0Exception e) {
+      throw new AuthorizationServiceException(e);
     }
 
-    private List<AuthUserDTO> getUserByQuery(String query) throws Auth0Exception {
-        System.out.println("Querying authentication service: " + query);
-        List<User> items = getUsers(query);
-        List<AuthUserDTO> authUsers = new ArrayList<>();
+    return userDto;
+  }
 
-        for(User user : items) {
+  @Override
+  public void updateUserInfo(UserDto userDto, String externalId)
+      throws AuthorizationServiceException, Auth0Exception {
 
-            AuthUserDTO authUserDTO = new AuthUserDTO();
-            authUserDTO.setEmail(user.getEmail());
-            authUserDTO.setName(user.getName());
-            authUserDTO.setSurname(user.getFamilyName());
-            authUserDTO.setNickname(user.getNickname());
-            authUserDTO.setPhotoUrl(user.getPicture());
-            authUserDTO.setMetadata(user.getUserMetadata());
+    User userToEdit = getUserById(externalId);
 
-            authUsers.add(authUserDTO);
-        }
+    userToEdit.setEmail(userDto.getEmail());
+    userToEdit.setName(userDto.getName());
+    userToEdit.setFamilyName(userDto.getSurname());
+    userToEdit.setNickname(userDto.getNickname());
+    userToEdit.setPicture(userDto.getPhotoUrl());
+    userToEdit.setUserMetadata(userDto.getMetadata());
+    managementAPI.users().update(externalId, userToEdit);
+  }
 
-        return authUsers;
+  private User getUserById(String externalUserId)
+      throws Auth0Exception, AuthorizationServiceException {
+    List<User> users = getUsers("user_id:" + externalUserId);
+    if (users.size() != 1) {
+      throw new AuthorizationServiceException(
+          "Got wrong user response from authentication service.");
     }
 
-    private List<User> getUsers(String query) throws Auth0Exception {
-        UserFilter userFilter = new UserFilter();
-        userFilter.withQuery(query);
-        UsersPage result = managementAPI.users().list(userFilter).execute();
-        return result.getItems();
-    }
-
-    @Override
-    public AuthUserDTO getUserByExternalId(String externalId) throws AuthorizationServiceException {
-        AuthUserDTO authUserDTO;
-        try {
-            List<AuthUserDTO> users = getUserByQuery("user_id:" + externalId);
-            if(users.size() != 1) {
-                throw new AuthorizationServiceException("Got wrong user response from authentication service.");
-            }
-            authUserDTO = users.get(0);
-        } catch (Auth0Exception e) {
-            throw new AuthorizationServiceException(e);
-        }
-
-        return authUserDTO;
-    }
-
-    @Override
-    public void updateUserInfo(AuthUserDTO authUserDTO, String externalId) throws AuthorizationServiceException, Auth0Exception {
-
-        User userToEdit = getUserById(externalId);
-
-        userToEdit.setEmail(authUserDTO.getEmail());
-        userToEdit.setName(authUserDTO.getName());
-        userToEdit.setFamilyName(authUserDTO.getSurname());
-        userToEdit.setNickname(authUserDTO.getNickname());
-        userToEdit.setPicture(authUserDTO.getPhotoUrl());
-        userToEdit.setUserMetadata(authUserDTO.getMetadata());
-        managementAPI.users().update(externalId, userToEdit);
-    }
-
-    private User getUserById(String externalUserId) throws Auth0Exception, AuthorizationServiceException {
-        List<User> users = getUsers("user_id:" + externalUserId);
-        if(users.size() != 1) {
-            throw new AuthorizationServiceException("Got wrong user response from authentication service.");
-        }
-
-        return users.get(0);
-    }
+    return users.get(0);
+  }
 }

@@ -27,4 +27,6 @@ public class Notification {
     @OneToOne
     private User user;
     private boolean seen;
+    @Enumerated(EnumType.STRING)
+    private NotificationType type;
 }

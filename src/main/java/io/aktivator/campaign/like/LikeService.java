@@ -4,6 +4,7 @@ import io.aktivator.campaign.donation.Donation;
 import io.aktivator.campaign.donation.DonationRepository;
 import io.aktivator.exceptions.DataException;
 import io.aktivator.exceptions.ResourceAlreadyExists;
+import io.aktivator.notifications.NotificationService;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class LikeService {
     private DonationRepository donationRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private NotificationService notificationService;
 
     public Like createLike(Long campaignId) {
         User currentUser = userService.getCurrentUser();
@@ -33,7 +36,8 @@ public class LikeService {
         Donation donation = donationRepository.findById(campaignId).get();
         donation.getLikes().add(savedLike);
         donationRepository.save(donation);
-        return likeRepository.save(like);
+        notificationService.createLikeNotification(currentUser, donation.getOwnerId());
+        return savedLike;
     }
 
     public List<Like> getLikes(Long campaignId) {
