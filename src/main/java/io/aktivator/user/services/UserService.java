@@ -49,10 +49,15 @@ public class UserService {
     return userRepository.findById(userId);
   }
 
-  private User registerExternalUser(String externalUserId) {
+  private User registerExternalUser(String externalUserId, UserDto userDto) {
     User user = new User();
     user.setExternalId(externalUserId);
-    user.setUserInformation(new UserInformation());
+    UserInformation userInformation = new UserInformation();
+    userInformation.setName(userDto.getName());
+    userInformation.setSurname(userDto.getSurname());
+    userInformation.setLongAddress(userInformation.getLongAddress());
+    userInformation.setUsername(userDto.getNickname());
+    user.setUserInformation(userInformation);
     return userRepository.save(user);
   }
 
@@ -105,11 +110,11 @@ public class UserService {
     return combineUserInformation(user.getExternalId(), user);
   }
 
-  public User registerUser(String externalUserId) {
+  public User registerUser(String externalUserId, UserDto userDto) {
     Optional<User> optionalUser = getUser(externalUserId);
     User user;
     if (optionalUser.isEmpty()) {
-      user = registerExternalUser(externalUserId);
+      user = registerExternalUser(externalUserId, userDto);
     } else {
       throw new ResourceAlreadyExists("This user is already registered.");
     }

@@ -6,6 +6,7 @@ import io.aktivator.user.exceptions.UserNotRegisteredException;
 import io.aktivator.user.model.User;
 import io.aktivator.user.model.UserInformation;
 import io.aktivator.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,12 @@ class UserServiceTest {
   @Mock private UserRepository userRepository;
   @Mock private AuthenticationServiceClient authClient;
   @InjectMocks private UserService userService;
+  private static UserDto userDto;
+
+  @BeforeAll
+  public static void beforeAll() {
+    userDto = USER_HELPER.getAuthUserDTO();
+  }
 
   @BeforeEach
   public void beforeEach() {
@@ -78,7 +85,7 @@ class UserServiceTest {
     // First, the internal user needs to be retrieved based on the internal id.
     when(userRepository.findUserById(1L)).thenReturn(Optional.of(user));
     // From that object, the external ID is going to be taken.
-    when(authClient.getUserByExternalId(user.getExternalId())).thenReturn(USER_HELPER.getAuthUserDTO());
+    when(authClient.getUserByExternalId(user.getExternalId())).thenReturn(userDto);
 
     UserDto userDto = userService.getInformationInternal(1L);
 
@@ -95,7 +102,7 @@ class UserServiceTest {
     user.setUserInformation(userInformation);
     when(userRepository.findUserByExternalId(user.getExternalId())).thenReturn(Optional.of(user));
 
-    userService.updateUserInfo(USER_HELPER.getAuthUserDTO(), user.getExternalId());
+    userService.updateUserInfo(userDto, user.getExternalId());
 
     verify(userRepository).save(userCaptor.capture());
     assertThat(userCaptor.getValue()).isEqualTo(user);
@@ -107,7 +114,7 @@ class UserServiceTest {
     // It needs to fetch the internal user object for that external ID.
     when(userRepository.findUserByExternalId(EXTERNAL_USER_ID)).thenReturn(Optional.of(new User()));
 
-    assertThatThrownBy(() -> userService.registerUser(EXTERNAL_USER_ID))
+    assertThatThrownBy(() -> userService.registerUser(EXTERNAL_USER_ID, userDto))
         .isInstanceOf(ResourceAlreadyExists.class)
         .hasMessage("This user is already registered.");
   }

@@ -8,6 +8,7 @@ import io.aktivator.events.PaymentSubmittedEventDTO;
 import io.aktivator.events.PaymentSubmittedService;
 import io.aktivator.notifications.NotificationService;
 import io.aktivator.user.model.User;
+import io.aktivator.user.services.UserDto;
 import io.aktivator.user.services.UserService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -37,7 +38,9 @@ public class AktivatorApiApplication {
     User registeredUser;
     String externalUserId = "auth0|5eac8eda02b1770be4749949";
     try {
-      registeredUser = userService.registerUser(externalUserId);
+      registeredUser =
+          userService.registerUser(
+              externalUserId, new UserDto("", "", "", "igorski", "", null, ""));
     } catch (Exception e) {
       registeredUser = userService.getUser(externalUserId).get();
     }
