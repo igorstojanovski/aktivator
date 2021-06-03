@@ -54,6 +54,15 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6
 ```
 ### To deploy the app
 ```
-heroku deploy:jar build/libs/*.jar -app causea-test
+heroku deploy:jar build/libs/*.jar --app causea-test
 ```
+In case you get the following message:
+```
+»   Warning: deploy:jar is not a heroku command.
+```
+you need to install the heroku java plugin:
+```
+heroku plugins:install java
+```
+
   
