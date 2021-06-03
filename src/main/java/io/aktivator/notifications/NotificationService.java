@@ -35,5 +35,6 @@ public class NotificationService {
         userService.getUser(toUser).orElseThrow(() -> new DataException("No such user exists.")));
     notification.setSeen(false);
     notification.setType(NotificationType.LIKE);
+    notificationRepository.save(notification);
   }
 }

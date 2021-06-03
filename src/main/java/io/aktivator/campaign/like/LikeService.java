@@ -15,42 +15,45 @@ import java.util.List;
 @Service
 public class LikeService {
 
-    @Autowired
-    private LikeRepository likeRepository;
-    @Autowired
-    private DonationRepository donationRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private NotificationService notificationService;
+  @Autowired private LikeRepository likeRepository;
+  @Autowired private DonationRepository donationRepository;
+  @Autowired private UserService userService;
+  @Autowired private NotificationService notificationService;
 
-    public Like createLike(Long campaignId) {
-        User currentUser = userService.getCurrentUser();
-        if(donationRepository.findByIdAndLikes_Owner_Id(campaignId, currentUser.getId()).isPresent()) {
-            throw new ResourceAlreadyExists("Like already exists for this user and this campaign.");
-        }
-
-        Like like = new Like();
-        like.setOwner(currentUser);
-        Like savedLike = likeRepository.save(like);
-        Donation donation = donationRepository.findById(campaignId).get();
-        donation.getLikes().add(savedLike);
-        donationRepository.save(donation);
-        notificationService.createLikeNotification(currentUser, donation.getOwnerId());
-        return savedLike;
+  public Like createLike(Long campaignId) {
+    User currentUser = userService.getCurrentUser();
+    if (donationRepository.findByIdAndLikes_Owner_Id(campaignId, currentUser.getId()).isPresent()) {
+      throw new ResourceAlreadyExists("Like already exists for this user and this campaign.");
     }
 
-    public List<Like> getLikes(Long campaignId) {
-        Donation donation = donationRepository
-                .findById(campaignId).orElseThrow(() -> new DataException("Campaign does not exist."));
+    Like like = new Like();
+    like.setOwner(currentUser);
+    Like savedLike = likeRepository.save(like);
+    Donation donation = donationRepository.findById(campaignId).get();
+    donation.getLikes().add(savedLike);
+    donationRepository.save(donation);
+    notificationService.createLikeNotification(currentUser, donation.getOwnerId());
+    return savedLike;
+  }
 
-        return donation.getLikes();
-    }
+  public List<Like> getLikes(Long campaignId) {
+    Donation donation =
+        donationRepository
+            .findById(campaignId)
+            .orElseThrow(() -> new DataException("Campaign does not exist."));
 
-    public void removeLike(Long campaignId) {
-        User currentUser = userService.getCurrentUser();
-        Donation donation = donationRepository.findById(campaignId).get();
-        donation.getLikes().removeIf(l -> l.getOwner().getId().equals(currentUser.getId()));
-        donationRepository.save(donation);
-    }
+    return donation.getLikes();
+  }
+
+  public void removeLike(Long campaignId) {
+    User currentUser = userService.getCurrentUser();
+    Donation donation =
+        donationRepository
+            .findById(campaignId)
+            .orElseThrow(() -> new DataException("No such campaign ID found."));
+    if(!donation.getLikes().removeIf(l -> l.getOwner().getId().equals(currentUser.getId()))) {
+      throw new DataException("No like was found. No like was removed.");
+    };
+    donationRepository.save(donation);
+  }
 }
