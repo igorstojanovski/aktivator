@@ -54,7 +54,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6
 ```
 ### To deploy the app
 ```
-heroku deploy:jar build/libs/*.jar --app causea-test
+heroku deploy:jar build/libs/*.jar --app causea-dev
 ```
 In case you get the following message:
 ```
