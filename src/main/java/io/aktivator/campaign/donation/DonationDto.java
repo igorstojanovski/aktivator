@@ -17,26 +17,26 @@ import java.util.Date;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DonationDto {
-  private Long id;
-  private String title;
-  private String description;
+  private final Long id;
+  private final String title;
+  private final String description;
 
   @JsonSerialize(converter = UserIdSerializer.class)
-  private Long ownerId;
+  private final Long ownerId;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-  private Date startDate;
+  private final Date startDate;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-  private Date endDate;
+  private final Date endDate;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-  private Date created = new Date();
+  private final Date created;
 
-  private Long target;
-  private boolean featured;
-  private boolean liked;
-  private int likesCount;
-  private CampaignStatus campaignStatus;
-  private BigDecimal balance;
+  private final Long target;
+  private final boolean featured;
+  private final boolean liked;
+  private final int likesCount;
+  private final CampaignStatus campaignStatus;
+  private final BigDecimal balance;
 }
