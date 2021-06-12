@@ -51,9 +51,9 @@ public class LikeService {
         donationRepository
             .findById(campaignId)
             .orElseThrow(() -> new DataException("No such campaign ID found."));
-    if(!donation.getLikes().removeIf(l -> l.getOwner().getId().equals(currentUser.getId()))) {
+    if (!donation.getLikes().removeIf(l -> l.getOwner().getId().equals(currentUser.getId()))) {
       throw new DataException("No like was found. No like was removed.");
-    };
+    }
     donationRepository.save(donation);
   }
 }
