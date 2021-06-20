@@ -1,4 +1,7 @@
 ## MULTIPART (MultipartProperties)
+auth0:
+    audience: https://buy-it-api.igorski.co
+    domain: igorski.eu.auth0.com
 # Enable multipart uploads
 spring:
     servlet:
@@ -11,12 +14,9 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: https://igorski.eu.auth0.com/
+                    issuer-uri: https://${auth0.domain}/
 file:
     upload-dir: ./uploads
-
-auth0:
-    audience: https://buy-it-api.igorski.co
 amazonProperties:
     endpointUrl: https://s3.eu-north-1.amazonaws.com
     downloadUrl: http://s3.eu-north-1.amazonaws.com
