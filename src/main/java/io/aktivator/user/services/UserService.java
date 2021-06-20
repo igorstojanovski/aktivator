@@ -12,13 +12,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
+
+import static io.aktivator.user.services.UserCacheEntry.isOlderThanADay;
 
 @Service
 public class UserService {
 
   private final UserRepository userRepository;
   private final AuthenticationServiceClient authClient;
+  private static final Map<String, UserCacheEntry> USER_CACHE = new HashMap<>();
 
   @Autowired
   public UserService(UserRepository userRepository, AuthenticationServiceClient authClient) {
@@ -71,7 +74,14 @@ public class UserService {
   }
 
   private UserDto combineUserInformation(String externalUserId, User user) {
-    UserDto authUserDto = authClient.getUserByExternalId(externalUserId);
+    UserCacheEntry userCacheEntry = USER_CACHE.get(externalUserId);
+    UserDto authUserDto;
+    if (userCacheEntry == null || isOlderThanADay(userCacheEntry.timestamp)) {
+      authUserDto = authClient.getUserByExternalId(externalUserId);
+      cacheUserDto(externalUserId, authClient.getUserByExternalId(externalUserId));
+    } else {
+      authUserDto = userCacheEntry.userDto;
+    }
     return new UserDto(
         user.getUserInformation().getName(),
         user.getUserInformation().getSurname(),
@@ -80,6 +90,14 @@ public class UserService {
         authUserDto.getPhotoUrl(),
         authUserDto.getMetadata(),
         user.getUserInformation().getLongAddress());
+  }
+
+  private void cacheUserDto(String externalUserId, UserDto authUserDto) {
+    USER_CACHE.put(externalUserId, new UserCacheEntry(authUserDto, new Date()));
+  }
+
+  private UserDto getCachedUserDto(String externalUserId) {
+    return USER_CACHE.get(externalUserId).userDto;
   }
 
   public void updateUserInfo(UserDto userDto, String externalId) {
