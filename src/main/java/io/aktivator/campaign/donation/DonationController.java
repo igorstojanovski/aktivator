@@ -1,6 +1,8 @@
 package io.aktivator.campaign.donation;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.aktivator.exceptions.DataException;
+import io.aktivator.user.UserViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +47,7 @@ public class DonationController {
     }
 
     @GetMapping
+    @JsonView(UserViews.Partial.class)
     public Page<DonationDto> getDonations(
         @SortDefault.SortDefaults({
             @SortDefault(sort = "id", direction = Sort.Direction.DESC)

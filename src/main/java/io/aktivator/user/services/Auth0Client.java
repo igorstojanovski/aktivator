@@ -148,7 +148,7 @@ public class Auth0Client implements AuthenticationServiceClient {
     userToEdit.setEmail(userDto.getEmail());
     userToEdit.setName(userDto.getName());
     userToEdit.setFamilyName(userDto.getSurname());
-    userToEdit.setNickname(userDto.getNickname());
+    userToEdit.setNickname(userDto.getUsername());
     userToEdit.setPicture(userDto.getPhotoUrl());
     userToEdit.setUserMetadata(userDto.getMetadata());
     managementAPI.users().update(externalId, userToEdit);

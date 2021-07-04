@@ -59,7 +59,7 @@ public class UserService {
     userInformation.setName(userDto.getName());
     userInformation.setSurname(userDto.getSurname());
     userInformation.setLongAddress(userInformation.getLongAddress());
-    userInformation.setUsername(userDto.getNickname());
+    userInformation.setUsername(userDto.getUsername());
     user.setUserInformation(userInformation);
     return userRepository.save(user);
   }
@@ -117,6 +117,7 @@ public class UserService {
     userInformation.setLongAddress(userDto.getLongAddress());
     userInformation.setName(userDto.getName());
     userInformation.setSurname(userDto.getSurname());
+    userInformation.setUsername(userDto.getUsername());
     user.setUserInformation(userInformation);
     userRepository.save(user);
   }

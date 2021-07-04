@@ -225,7 +225,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{        \r\n    \"name\": \"Igor\",\r\n    \"surname\": \"Stojanovski\",\r\n    \"longAddress\": \"Somewhere over the rainbows\"\r\n}",
+					"raw": "{        \r\n    \"name\": \"Igor\",\r\n    \"surname\": \"Stojanovski\",\r\n    \"longAddress\": \"Somewhere over the rainbows\",\r\n    \"username\": \"igorski\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

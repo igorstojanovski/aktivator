@@ -1,5 +1,6 @@
 package io.aktivator.user;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.aktivator.exceptions.DataException;
 import io.aktivator.user.model.User;
 import io.aktivator.user.services.UserDto;
@@ -32,14 +33,15 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @JsonView(UserViews.Partial.class)
     public ResponseEntity<UserDto> getUserInfoById(@PathVariable Long userId) throws AuthorizationServiceException {
         UserDto userInfoDTO = userService.getInformationInternal(userId);
         return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Object> editUserInfo(@RequestBody UserDto userDto) throws DataException {
+    public ResponseEntity<String> editUserInfo(@RequestBody UserDto userDto) throws DataException {
         userService.updateUserInfo(userDto, userService.getExternalUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }
