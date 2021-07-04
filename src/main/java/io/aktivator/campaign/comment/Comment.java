@@ -19,7 +19,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    @JsonSerialize(converter = UserIdSerializer.class)
     private Long userId;
     @Column(nullable = false)
     private String text;

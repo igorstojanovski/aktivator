@@ -83,6 +83,7 @@ public class UserService {
       authUserDto = userCacheEntry.userDto;
     }
     return new UserDto(
+        user.getId(),
         user.getUserInformation().getName(),
         user.getUserInformation().getSurname(),
         authUserDto.getEmail(),

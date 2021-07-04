@@ -40,7 +40,7 @@ public class AktivatorApiApplication {
     try {
       registeredUser =
           userService.registerUser(
-              externalUserId, new UserDto("", "", "", "igorski", "", null, ""));
+              externalUserId, new UserDto(1L, "", "", "", "igorski", "", null, ""));
     } catch (Exception e) {
       registeredUser = userService.getUser(externalUserId).get();
     }

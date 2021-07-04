@@ -102,6 +102,7 @@ public class Auth0Client implements AuthenticationServiceClient {
     for (User user : items) {
       authUsers.add(
           new UserDto(
+              null,
               user.getName(),
               user.getFamilyName(),
               user.getEmail(),
