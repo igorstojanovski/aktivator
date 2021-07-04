@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "ea794e1b-c5a4-4986-9ed7-93e10eebb2c3",
+		"_postman_id": "a3fb1d7c-4b1d-4e91-92a6-9041505d1276",
 		"name": "Causea",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Fetch Access Token - OWNER",
+			"name": "Fetch Access Token -OWNER",
 			"event": [
 				{
 					"listen": "test",
@@ -225,7 +225,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{        \r\n    \"name\": \"Igor\",\r\n    \"surname\": \"Stojanovski\",\r\n    \"longAddress\": \"Somewhere over the rainbow\"\r\n}",
+					"raw": "{        \r\n    \"name\": \"Igor\",\r\n    \"surname\": \"Stojanovski\",\r\n    \"longAddress\": \"Somewhere over the rainbows\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -246,7 +246,7 @@
 			"response": []
 		},
 		{
-			"name": "User - OWNER (ID = 2)",
+			"name": "User - OWNER (ID = 1)",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -270,7 +270,7 @@
 			"response": []
 		},
 		{
-			"name": "User - DONOR (ID = 1)",
+			"name": "User - DONOR (ID = 2)",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -281,14 +281,14 @@
 					}
 				],
 				"url": {
-					"raw": "{{causea_url}}/api/user/1",
+					"raw": "{{causea_url}}/api/user/2",
 					"host": [
 						"{{causea_url}}"
 					],
 					"path": [
 						"api",
 						"user",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -477,20 +477,19 @@
 					}
 				],
 				"url": {
-					"raw": "{{causea_url}}/api/campaign/donation/?userId=2",
+					"raw": "{{causea_url}}/api/campaign/donation?userId=1",
 					"host": [
 						"{{causea_url}}"
 					],
 					"path": [
 						"api",
 						"campaign",
-						"donation",
-						""
+						"donation"
 					],
 					"query": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "1"
 						}
 					]
 				}
@@ -504,7 +503,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "{{access_token}}",
+						"value": "{{access_token_donor}}",
 						"type": "text"
 					}
 				],
@@ -607,7 +606,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"text\": \"Support!\",\n\t\"date\": \"2019-08-11\"\n}"
+					"raw": "{\n\t\"text\": \"Support this campaign!!!\",\n\t\"date\": \"2019-08-11\"\n}"
 				},
 				"url": {
 					"raw": "{{causea_url}}/api/campaign/1/comment?page=0&limit=10",
@@ -658,12 +657,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8283/api/campaign/1/comment?page=0&limit=10",
-					"protocol": "http",
+					"raw": "{{causea_url}}/api/campaign/1/comment?page=0&limit=10",
 					"host": [
-						"localhost"
+						"{{causea_url}}"
 					],
-					"port": "8283",
 					"path": [
 						"api",
 						"campaign",
