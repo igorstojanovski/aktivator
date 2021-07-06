@@ -60,7 +60,7 @@ public class AktivatorApiApplication {
             CampaignStatus.NEW,
             BigDecimal.ZERO);
 
-    ResponseEntity<Donation> campaign = donationService.saveCampaign(createRequest, registeredUser);
+    ResponseEntity<Donation> campaign = donationService.createCampaign(createRequest, registeredUser);
 
     PaymentSubmittedEventDTO paymentEvent = new PaymentSubmittedEventDTO();
     paymentEvent.setCampaignId(campaign.getBody().getId());

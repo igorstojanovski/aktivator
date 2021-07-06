@@ -15,6 +15,6 @@ public class UserTestHelper {
   public UserDto getAuthUserDTO() {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("keyOne", "valueOne");
-    return new UserDto(SHERLOCK, HOLMES, DUMMY_EMAIL_COM, "causea", "", metadata, "");
+    return new UserDto(1L, SHERLOCK, HOLMES, DUMMY_EMAIL_COM, "causea", "", metadata, "");
   }
 }
