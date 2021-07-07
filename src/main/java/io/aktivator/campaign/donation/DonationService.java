@@ -196,4 +196,12 @@ public class DonationService {
         allDonations.getPageable(),
         allDonations.getTotalPages());
   }
+
+  public List<Donation> getDonations(CampaignStatus status) {
+    return donationRepository.findByCampaignStatus(status);
+  }
+
+  public void saveAll(List<Donation> donations) {
+    donationRepository.saveAll(donations);
+  }
 }

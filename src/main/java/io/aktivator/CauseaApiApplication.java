@@ -16,13 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @SpringBootApplication
-public class AktivatorApiApplication {
+@EnableScheduling
+public class CauseaApiApplication {
 
   @Autowired private UserService userService;
   @Autowired private DonationService donationService;
@@ -30,7 +32,7 @@ public class AktivatorApiApplication {
   @Autowired private NotificationService notificationService;
 
   public static void main(String[] args) {
-    SpringApplication.run(AktivatorApiApplication.class, args);
+    SpringApplication.run(CauseaApiApplication.class, args);
   }
 
   @PostConstruct
