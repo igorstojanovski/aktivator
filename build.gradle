@@ -27,8 +27,10 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
 	implementation 'org.springframework.security:spring-security-config'
 	implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.2.5.RELEASE'
-	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
-	implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.743'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
+	implementation ('com.amazonaws:aws-java-sdk:1.12.22') {
+		exclude group: 'com.amazonaws', module: 'aws-java-sdk-kinesisvideo'
+	}
 	compile group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.3.4'
 
 	compileOnly 'org.projectlombok:lombok:1.18.12'
