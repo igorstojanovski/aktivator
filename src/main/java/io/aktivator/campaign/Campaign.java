@@ -16,31 +16,34 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Inheritance(
-    strategy = InheritanceType.JOINED
-)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public class Campaign {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String description;
-    private Long ownerId;
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date startDate;
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @NotNull
-    private Date endDate;
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date created = new Date();
-    private boolean featured;
-    @OneToMany
-    private List<Like> likes;
-    @Enumerated(EnumType.STRING)
-    private CampaignStatus campaignStatus;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  private String title;
+  private String description;
+  private Long ownerId;
+
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private Date startDate;
+
+  @Temporal(TemporalType.DATE)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  @NotNull
+  private Date endDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @NotNull
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+  private Date created = new Date();
+
+  private boolean featured;
+  @OneToMany private List<Like> likes;
+
+  @Enumerated(EnumType.STRING)
+  private CampaignStatus campaignStatus;
 }
