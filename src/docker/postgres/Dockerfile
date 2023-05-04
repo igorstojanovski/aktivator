@@ -1,4 +1,4 @@
-FROM postgres
+FROM postgres:15-bullseye
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=password123
 ENV POSTGRES_DB=causea
