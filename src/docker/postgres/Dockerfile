@@ -1,4 +1,4 @@
-FROM postgres
+FROM postgres:16.4-bookworm
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=password123
 ENV POSTGRES_DB=causea
